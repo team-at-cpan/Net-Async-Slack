@@ -1,0 +1,4 @@
+{
+   "oauth_url" : "https://slack.com/oauth/authorize{?client_id,scope,redirect_uri,state,team}"
+}
+
