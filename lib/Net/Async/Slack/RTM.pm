@@ -214,7 +214,6 @@ sub connect {
     )
 }
 
-
 sub on_frame {
     my ($self, $ws, $bytes) = @_;
     my $text = Encode::decode_utf8($bytes);
