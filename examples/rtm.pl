@@ -2,6 +2,7 @@
 use strict;
 use warnings;
 
+use Time::Moment;
 use IO::Async::Loop;
 use Net::Async::Slack;
 
@@ -23,20 +24,23 @@ my $rtm = $slack->rtm->get;
 $log->info('Connection succeeded, watching for messages');
 
 # Send out a message occasionally
-my $timer = $rtm->ryu
-    ->timer(interval => 15)
-    ->each(sub {
-        $rtm->send_message(
-            channel => 'D...',
-            text    => 'good morning',
-        )
-    });
+my $timer;
+if(my $channel = shift(@ARGV)) {
+    $timer = $rtm->ryu
+        ->timer(interval => 15)
+        ->each(sub {
+            $rtm->send_message(
+                channel => 'D...',
+                text    => 'good morning',
+            )
+        });
+}
 
 # Report whenever we get a message
 $rtm->events
     ->filter_isa(qw(Net::Async::Slack::Event::Message))
     ->map(sub {
-        sprintf "Message: %s received at %f", $_->text, $_->ts
+        sprintf "%s %s: %s", Time::Moment->from_epoch($_->ts)->to_string, $_->source_team_id, $_->text
     })
     ->say
     ->await;

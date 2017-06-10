@@ -25,7 +25,10 @@ Net::Async::Slack - support for the L<https://slack.com> APIs with L<IO::Async>
 
 =head1 DESCRIPTION
 
-This is a basic wrapper for Slack's API.
+This is a basic wrapper for Slack's API. It's an early version, the module API is likely
+to change somewhat over time.
+
+See the C<< examples/ >> directory for usage.
 
 =cut
 
@@ -61,6 +64,95 @@ my $json = JSON::MaybeXS->new;
 
 =cut
 
+=head2 rtm
+
+Establishes a connection to the Slack RTM websocket API, and
+resolves to a L<Net::Async::Slack::RTM> instance.
+
+=cut
+
+sub rtm {
+    my ($self, %args) = @_;
+    $self->{rtm} //= $self->http_get(
+        uri => URI->new(
+            $self->endpoint(
+                'rtm_connect',
+                token => $self->token
+            )
+        )
+    )->then(sub {
+        my $result = shift;
+        return Future->done(URI->new($result->{url})) if exists $result->{url};
+        return Future->fail('invalid URL');
+    })->then(sub {
+        my ($uri) = @_;
+        $self->add_child(
+            my $rtm = Net::Async::Slack::RTM->new(
+                slack => $self,
+                wss_uri => $uri,
+            )
+        );
+        $rtm->connect->transform(done => sub { $rtm })
+    })
+}
+
+=head2 send_message
+
+Send a message to a user or channel.
+
+Supports the following named parameters:
+
+=over 4
+
+=item * channel - who to send the message to, can be a channel ID or C<< #channel >> name, or user ID
+
+=item * text - the message, see L<https://api.slack.com/docs/message-formatting> for details
+
+=item * attachments - more advanced messages, see L<https://api.slack.com/docs/message-attachments>
+
+=item * parse - whether to parse content and convert things like links
+
+=back
+
+and the following named boolean parameters:
+
+=over 4
+
+=item * link_names - convert C<< @user >> and C<< #channel >> to links
+
+=item * unfurl_links - show preview for URLs
+
+=item * unfurl_media - show preview for things that look like media links
+
+=item * as_user - send as user
+
+=item * reply_broadcast - send to all users when replying to a thread
+
+=back
+
+Returns a L<Future>, although the content of the response is subject to change.
+
+=cut
+
+sub send_message {
+    my ($self, %args) = @_;
+    die 'You need to pass either text or attachments' unless $args{text} || $args{attachments};
+    my @content;
+    push @content, token => $self->token;
+    push @content, channel => $args{channel} || die 'need a channel';
+    push @content, text => $args{text} if defined $args{text};
+    push @content, attachments => $json->encode($args{attachments}) if $args{attachments};
+    push @content, $_ => $args{$_} for grep exists $args{$_}, qw(parse link_names unfurl_links unfurl_media as_user reply_broadcast);
+    $self->http_post(
+        $self->endpoint(
+            'chat.postMessage',
+        ),
+        \@content,
+    )
+}
+
+=head1 METHODS - Internal
+
 =head2 endpoints
 
 Returns the hashref of API endpoints, loading them on first call from the C<share/endpoints.json> file.
@@ -68,8 +160,8 @@ Returns the hashref of API endpoints, loading them on first call from the C<shar
 =cut
 
 sub endpoints {
-	my ($self) = @_;
-	$self->{endpoints} ||= do {
+    my ($self) = @_;
+    $self->{endpoints} ||= do {
         my $path = Path::Tiny::path(__DIR__)->parent(3)->child('share/endpoints.json');
         $path = Path::Tiny::path(
             File::ShareDir::dist_file(
@@ -89,19 +181,19 @@ passed to the method.
 =cut
 
 sub endpoint {
-	my ($self, $endpoint, %args) = @_;
-	URI::Template->new($self->endpoints->{$endpoint . '_url'})->process(%args);
+    my ($self, $endpoint, %args) = @_;
+    URI::Template->new($self->endpoints->{$endpoint . '_url'})->process(%args);
 }
 
 sub oauth {
-	my ($self) = @_;
-	$self->{oauth} //= Net::Async::OAuth::Client->new(
-		realm           => 'Slack',
-		consumer_key    => $self->key,
-		consumer_secret => $self->secret,
-		token           => $self->token,
-		token_secret    => $self->token_secret,
-	)
+    my ($self) = @_;
+    $self->{oauth} //= Net::Async::OAuth::Client->new(
+        realm           => 'Slack',
+        consumer_key    => $self->key,
+        consumer_secret => $self->secret,
+        token           => $self->token,
+        token_secret    => $self->token_secret,
+    )
 }
 
 sub client_id { shift->{client_id} }
@@ -130,41 +222,9 @@ sub oauth_request {
     })
 }
 
-=head2 rtm
-
-Establishes a connection to the Slack RTM websocket API, and
-resolves to a L<Net::Async::Slack::RTM> instance.
-
-=cut
-
-sub rtm {
-    my ($self, %args) = @_;
-    $self->{rtm} //= $self->http_get(
-		uri => URI->new(
-            $self->endpoint(
-                'rtm_connect',
-                token => $self->token
-            )
-        )
-	)->then(sub {
-        my $result = shift;
-        return Future->done(URI->new($result->{url})) if exists $result->{url};
-        return Future->fail('invalid URL');
-    })->then(sub {
-        my ($uri) = @_;
-        $self->add_child(
-            my $rtm = Net::Async::Slack::RTM->new(
-                slack => $self,
-                wss_uri => $uri,
-            )
-        );
-        $rtm->connect->transform(done => sub { $rtm })
-    })
-}
-
 =head2 token
 
-Travis token.
+Our API token.
 
 =cut
 
@@ -172,29 +232,29 @@ sub token { shift->{token} }
 
 =head2 http
 
-Returns the HTTP instance used for communicating with Travis.
+Returns the HTTP instance used for communicating with the API.
 
 Currently autocreates a L<Net::Async::HTTP> instance.
 
 =cut
 
 sub http {
-	my ($self) = @_;
-	$self->{http} ||= do {
-		require Net::Async::HTTP;
-		$self->add_child(
-			my $ua = Net::Async::HTTP->new(
-				fail_on_error            => 1,
-				max_connections_per_host => 2,
-				pipeline                 => 1,
-				max_in_flight            => 8,
-				decode_content           => 1,
-				timeout                  => 30,
-				user_agent               => 'Mozilla/4.0 (perl; https://metacpan.org/pod/Net::Async::Slack; TEAM@cpan.org)',
-			)
-		);
-		$ua
-	}
+    my ($self) = @_;
+    $self->{http} ||= do {
+        require Net::Async::HTTP;
+        $self->add_child(
+            my $ua = Net::Async::HTTP->new(
+                fail_on_error            => 1,
+                max_connections_per_host => 2,
+                pipeline                 => 1,
+                max_in_flight            => 8,
+                decode_content           => 1,
+                timeout                  => 30,
+                user_agent               => 'Mozilla/4.0 (perl; https://metacpan.org/pod/Net::Async::Slack; TEAM@cpan.org)',
+            )
+        );
+        $ua
+    }
 }
 
 =head2 http_get
@@ -204,26 +264,19 @@ Issues an HTTP GET request.
 =cut
 
 sub http_get {
-	my ($self, %args) = @_;
-    # my %auth = $self->auth_info;
-
-    #if(my $hdr = delete $auth{headers}) {
-    #	$args{headers}{$_} //= $hdr->{$_} for keys %$hdr
-    #}
-    #$args{headers}{Accept} //= $self->mime_type;
-    #$args{$_} //= $auth{$_} for keys %auth;
+    my ($self, %args) = @_;
 
     my $uri = delete $args{uri};
-	$log->tracef("GET %s { %s }", "$uri", \%args);
+    $log->tracef("GET %s { %s }", "$uri", \%args);
     $self->http->GET(
         $uri,
-		%args
+        %args
     )->then(sub {
         my ($resp) = @_;
         return { } if $resp->code == 204;
         return { } if 3 == ($resp->code / 100);
         try {
-			$log->tracef('HTTP response for %s was %s', "$uri", $resp->as_string("\n"));
+            $log->tracef('HTTP response for %s was %s', "$uri", $resp->as_string("\n"));
             return Future->done($json->decode($resp->decoded_content))
         } catch {
             $log->errorf("JSON decoding error %s from HTTP response %s", $@, $resp->as_string("\n"));
@@ -241,6 +294,42 @@ sub http_get {
     })
 }
 
+=head2 http_post
+
+Issues an HTTP POST request.
+
+=cut
+
+sub http_post {
+    my ($self, $uri, $content, %args) = @_;
+
+    $log->tracef("POST %s { %s }", "$uri", \%args);
+
+    $self->http->POST(
+        $uri,
+        $content,
+    )->then(sub {
+        my ($resp) = @_;
+        return { } if $resp->code == 204;
+        return { } if 3 == ($resp->code / 100);
+        try {
+            $log->tracef('HTTP response for %s was %s', "$uri", $resp->as_string("\n"));
+            return Future->done($json->decode($resp->decoded_content))
+        } catch {
+            $log->errorf("JSON decoding error %s from HTTP response %s", $@, $resp->as_string("\n"));
+            return Future->fail($@ => json => $resp);
+        }
+    })->else(sub {
+        my ($err, $src, $resp, $req) = @_;
+        $src //= '';
+        if($src eq 'http') {
+            $log->errorf("HTTP error %s, request was %s with response %s", $err, $req->as_string("\n"), $resp->as_string("\n"));
+        } else {
+            $log->errorf("Other failure (%s): %s", $src // 'unknown', $err);
+        }
+        Future->fail(@_);
+    })
+}
 
 sub configure {
     my ($self, %args) = @_;
@@ -251,6 +340,20 @@ sub configure {
 }
 
 1;
+
+=head1 SEE ALSO
+
+=over 4
+
+=item * L<https://metacpan.org/pod/AnyEvent::SlackRTM>
+
+=item * L<https://metacpan.org/pod/Mojo::SlackRTM>
+
+=item * L<https://metacpan.org/pod/Slack::RTM::Bot>
+
+=item * L<https://metacpan.org/pod/WebService::Slack::WebApi>
+
+=back
 
 =head1 AUTHOR
 
