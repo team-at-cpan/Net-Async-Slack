@@ -29,3 +29,5 @@ requires 'Net::Async::WebSocket::Client', 0;
 requires 'namespace::clean', 0;
 requires 'Bytes::Random::Secure', '>= 0.29';
 
+requires 'Check::UnitCheck';
+

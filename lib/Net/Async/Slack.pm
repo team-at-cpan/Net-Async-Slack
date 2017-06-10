@@ -53,6 +53,8 @@ use Log::Any qw($log);
 
 use Net::Async::OAuth::Client;
 
+use Net::Async::Slack::RTM;
+
 my $json = JSON::MaybeXS->new;
 
 =head1 METHODS

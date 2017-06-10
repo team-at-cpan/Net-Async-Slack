@@ -1,0 +1,23 @@
+package Net::Async::Slack::Event::StarAdded;
+
+use strict;
+use warnings;
+
+use Net::Async::Slack::EventType;
+
+=head1 NAME
+
+Net::Async::Slack::Event::StarAdded - A team member has starred an item
+
+=head1 DESCRIPTION
+
+Example input data:
+
+    stars:read
+
+=cut
+
+sub type { 'star_added' }
+
+1;
+
