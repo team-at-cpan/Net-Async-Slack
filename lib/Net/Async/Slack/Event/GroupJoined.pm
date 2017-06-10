@@ -15,9 +15,7 @@ Example input data:
 
     {
         "type": "group_joined",
-        "channel": {
-            …
-        }
+        "channel": { ... }
     }
 
 
