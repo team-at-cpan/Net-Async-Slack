@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::Bot;
 use strict;
 use warnings;
 
+# VERSION
+
 =head1 DESCRIPTION
 
 {

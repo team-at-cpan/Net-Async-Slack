@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::ChannelArchive;
 use strict;
 use warnings;
 
+# VERSION
+
 use parent qw(Net::Async::Slack::Event::Channel);
 
 use Net::Async::Slack::EventType;

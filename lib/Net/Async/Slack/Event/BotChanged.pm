@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::BotChanged;
 use strict;
 use warnings;
 
+# VERSION
+
 use parent qw(Net::Async::Slack::Event::Bot);
 
 use Net::Async::Slack::EventType;

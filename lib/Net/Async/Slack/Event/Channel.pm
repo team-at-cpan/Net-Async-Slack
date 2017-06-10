@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::Channel;
 use strict;
 use warnings;
 
+# VERSION
+
 sub channel {
     my ($self) = @_;
     $self->{channel} //= $self->slack->channel_info($self->channel_id)

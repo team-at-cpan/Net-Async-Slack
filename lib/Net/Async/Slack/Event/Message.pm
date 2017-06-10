@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::Message;
 use strict;
 use warnings;
 
+# VERSION
+
 use Net::Async::Slack::EventType;
 
 =head1 DESCRIPTION

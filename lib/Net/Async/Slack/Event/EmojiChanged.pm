@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::EmojiChanged;
 use strict;
 use warnings;
 
+# VERSION
+
 use Net::Async::Slack::EventType;
 
 =head1 NAME

@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::ImMarked;
 use strict;
 use warnings;
 
+# VERSION
+
 use Net::Async::Slack::EventType;
 
 =head1 NAME
