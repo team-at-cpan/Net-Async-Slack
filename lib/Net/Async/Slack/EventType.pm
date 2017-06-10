@@ -3,6 +3,8 @@ package Net::Async::Slack::EventType;
 use strict;
 use warnings;
 
+# VERSION
+
 use Log::Any qw($log);
 
 use Check::UnitCheck;
