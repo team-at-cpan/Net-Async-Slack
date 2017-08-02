@@ -345,13 +345,15 @@ sub configure {
 
 =over 4
 
-=item * L<https://metacpan.org/pod/AnyEvent::SlackRTM>
+=item * L<AnyEvent::SlackRTM> - low-level API wrapper around RTM
 
-=item * L<https://metacpan.org/pod/Mojo::SlackRTM>
+=item * L<Mojo::SlackRTM> - another RTM-specific wrapper, this time based on Mojolicious
 
-=item * L<https://metacpan.org/pod/Slack::RTM::Bot>
+=item * L<Slack::RTM::Bot> - more RTM support, this time via LWP and a subprocess/thread for handling the websocket part
 
-=item * L<https://metacpan.org/pod/WebService::Slack::WebApi>
+=item * L<WebService::Slack::WebApi> - Furl-based wrapper around the REST API
+
+=item * L<AnyEvent::SlackBot> - another AnyEvent RTM implementation
 
 =back
 
