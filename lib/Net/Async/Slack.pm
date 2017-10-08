@@ -173,6 +173,8 @@ sub endpoints {
     };
 }
 
+sub slack_host { shift->{slack_host} }
+
 =head2 endpoint
 
 Processes the given endpoint as a template, using the named parameters
@@ -182,7 +184,9 @@ passed to the method.
 
 sub endpoint {
     my ($self, $endpoint, %args) = @_;
-    URI::Template->new($self->endpoints->{$endpoint . '_url'})->process(%args);
+    my $uri = URI::Template->new($self->endpoints->{$endpoint . '_url'})->process(%args);
+    $uri->host($self->slack_host);
+    $uri
 }
 
 sub oauth {
@@ -333,7 +337,7 @@ sub http_post {
 
 sub configure {
     my ($self, %args) = @_;
-    for my $k (qw(client_id token)) {
+    for my $k (qw(client_id token slack_host)) {
         $self->{$k} = delete $args{$k} if exists $args{$k};
     }
     $self->next::method(%args);
