@@ -318,7 +318,7 @@ Issues an HTTP POST request.
 sub http_post {
     my ($self, $uri, $content, %args) = @_;
 
-    $log->tracef("POST %s { %s }", "$uri", \%args);
+    $log->tracef("POST %s { %s } <= %s", "$uri", \%args, $content);
 
     $self->http->POST(
         $uri,
