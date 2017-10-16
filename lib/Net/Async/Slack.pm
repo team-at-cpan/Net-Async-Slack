@@ -57,6 +57,7 @@ use Log::Any qw($log);
 use Net::Async::OAuth::Client;
 
 use Net::Async::Slack::RTM;
+use Net::Async::Slack::Message;
 
 my $json = JSON::MaybeXS->new;
 
@@ -148,7 +149,17 @@ sub send_message {
             'chat.postMessage',
         ),
         \@content,
-    )
+    )->then(sub {
+        my ($data) = @_;
+        return Future->fail('send failed', slack => $data) unless $data->{ok};
+        Future->done(
+            Net::Async::Slack::Message->new(
+                slack => $self,
+                channel => $data->{channel},
+                thread_ts => $data->{ts},
+            )
+        )
+    })
 }
 
 =head1 METHODS - Internal
