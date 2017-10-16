@@ -32,7 +32,7 @@ sub from_json {
     my ($self, $data) = @_;
     $log->tracef('Looking for type %s with available %s', $data->{type}, join ',', sort keys %REGISTERED_TYPES);
     return undef unless my $class = $REGISTERED_TYPES{$data->{type}};
-    for (qw(user channel)) {
+    for (qw(user channel team source_team)) {
         $data->{$_ . '_id'} = delete $data->{$_} if exists $data->{$_};
     }
     return $class->new(%$data);
