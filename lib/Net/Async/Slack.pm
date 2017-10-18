@@ -237,38 +237,6 @@ sub oauth_request {
     })
 }
 
-=head2 rtm
-
-Establishes a connection to the Slack RTM websocket API, and
-resolves to a L<Net::Async::Slack::RTM> instance.
-
-=cut
-
-sub rtm {
-    my ($self, %args) = @_;
-    $self->{rtm} //= $self->http_get(
-		uri => URI->new(
-            $self->endpoint(
-                'rtm_connect',
-                token => $self->token
-            )
-        )
-	)->then(sub {
-        my $result = shift;
-        return Future->done(URI->new($result->{url})) if exists $result->{url};
-        return Future->fail('invalid URL');
-    })->then(sub {
-        my ($uri) = @_;
-        $self->add_child(
-            my $rtm = Net::Async::Slack::RTM->new(
-                slack => $self,
-                wss_uri => $uri,
-            )
-        );
-        $rtm->connect->transform(done => sub { $rtm })
-    })
-}
-
 =head2 token
 
 API token.
