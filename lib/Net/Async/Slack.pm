@@ -164,8 +164,6 @@ sub send_message {
 
 =head1 METHODS - Internal
 
-=======
->>>>>>> oauth and rtm pieces
 =head2 endpoints
 
 Returns the hashref of API endpoints, loading them on first call from the C<share/endpoints.json> file.
