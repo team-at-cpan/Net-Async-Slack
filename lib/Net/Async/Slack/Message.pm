@@ -3,6 +3,8 @@ package Net::Async::Slack::Message;
 use strict;
 use warnings;
 
+# VERSION
+
 use Scalar::Util qw(weaken);
 use JSON::MaybeXS;
 
