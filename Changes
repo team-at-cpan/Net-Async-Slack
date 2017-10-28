@@ -4,6 +4,11 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
 
 0.002     2017-10-22 17:03:30+08:00 Asia/Kuala_Lumpur
+    New features:
+
+    * ::Message instance allowing support for updating messages
+    * Slack threaded messaging support (via `thread_ts`)
+    * Support for setting the `slack_host` for domains other than `slack.com`
 
 0.001     2017-06-11 06:02:08+08:00 Asia/Kuala_Lumpur
     Initial version.
