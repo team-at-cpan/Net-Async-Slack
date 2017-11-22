@@ -201,7 +201,7 @@ sub connect {
         )
     );
     $self->{ws}->connect(
-        url        => $uri,
+        url        => "$uri",
         host       => $uri->host,
         ($uri->scheme eq 'wss'
         ? (
