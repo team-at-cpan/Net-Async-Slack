@@ -145,7 +145,6 @@ sub events {
     }
 }
 
-
 =head2 send_message
 
 Sends a message to a user or channel.
