@@ -165,13 +165,14 @@ sub send_message {
 sub join_channel {
     my ($self, %args) = @_;
     die 'You need to pass a channel name' unless $args{channel};
+    my @content;
+    push @content, token => $self->token;
+    push @content, name => $args{channel};
     $self->http_post(
         $self->endpoint(
             'channels.join',
         ),
-        [
-            name => $args{channel}
-        ]
+        \@content,
     )
 }
 
