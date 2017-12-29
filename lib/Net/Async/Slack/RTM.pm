@@ -35,6 +35,7 @@ use JSON::MaybeXS;
 use Time::Moment;
 use Syntax::Keyword::Try;
 
+use IO::Async::Timer::Countdown;
 use Net::Async::WebSocket::Client;
 
 use Net::Async::Slack::Event::AccountsChanged;
@@ -277,11 +278,39 @@ sub configure {
     $self->next::method(%args);
 }
 
+sub ping_timer {
+    my ($self) = @_;
+    $self->{ping_timer} ||= do {
+        $self->add_child(
+            my $timer = IO::Async::Timer::Countdown->new(
+                delay => 10,
+                on_expire => $self->curry::weak::trigger_ping,
+            )
+        );
+        $timer
+    }
+}
+
+sub trigger_ping {
+    my ($self, %args) = @_;
+    my $id = $self->next_id($args{id});
+	$self->ws->send_frame(
+        buffer => $json->encode({
+            type    => 'ping',
+            id      => $id,
+        }),
+        masked => 1
+    );
+    $self->ping_timer->reset;
+    $self->ping_timer->start if $self->ping_timer->is_expired;
+}
+
 sub _add_to_loop {
     my ($self, $loop) = @_;
     $self->add_child(
         $self->{ryu} = Ryu::Async->new
     );
+    $self->ping_timer->start;
     $self->{last_id} //= 0;
 }
 
