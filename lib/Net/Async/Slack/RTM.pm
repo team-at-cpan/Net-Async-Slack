@@ -202,15 +202,6 @@ sub connect {
     );
     $self->{ws}->connect(
         url        => "$uri",
-        host       => $uri->host,
-        ($uri->scheme eq 'wss'
-        ? (
-            service      => 443,
-            extensions   => [ qw(SSL) ],
-            SSL_hostname => $uri->host,
-        ) : (
-            service    => 80,
-        ))
     )
 }
 
