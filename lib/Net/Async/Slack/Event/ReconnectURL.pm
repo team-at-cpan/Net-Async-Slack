@@ -5,8 +5,6 @@ use warnings;
 
 # VERSION
 
-use Net::Async::Slack::EventType;
-
 =head1 NAME
 
 Net::Async::Slack::Event::ReconnectURL - Experimental
@@ -22,9 +20,9 @@ Example input data:
 
 =cut
 
-use Net::Async::Slack::EventType;
-
 use URI;
+
+use Net::Async::Slack::EventType;
 
 sub url { shift->{url} }
 
