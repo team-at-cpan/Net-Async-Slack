@@ -31,10 +31,15 @@ for my $row ($tbl->look_down(_tag => 'tr')) {
     my ($type, $description, $supported_by) = map s{\v+}{}gr, map $_->as_text, $row->look_down(_tag => 'td');
     next ROW unless $type;
     my $class = ucfirst($type =~ s/[_.](\w)/\U\1/gr);
+
+    # `Url` just looks wrong...
+    $class =~ s{Url}{URL}g;
     warn "$type is $class and works with $supported_by, description: $description\n";
     my $output_filename = 'lib/Net/Async/Slack/Event/' . $class . '.pm';
     warn "output file is [$output_filename]\n";
-    next ROW if path($output_filename)->exists;
+
+    # Normally we only want to import these once, but things do change over time
+    # next ROW if path($output_filename)->exists;
 
     my $tree = do {
         my $content = $ua->get('https://api.slack.com/events/' . $type)->result->body or die "no doc page for $type";
@@ -57,6 +62,8 @@ use warnings;
 # VERSION
 
 use Net::Async::Slack::EventType;
+
+=encoding UTF-8
 
 =head1 NAME
 
