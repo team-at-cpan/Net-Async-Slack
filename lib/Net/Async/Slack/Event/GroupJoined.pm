@@ -7,6 +7,8 @@ use warnings;
 
 use Net::Async::Slack::EventType;
 
+=encoding UTF-8
+
 =head1 NAME
 
 Net::Async::Slack::Event::GroupJoined - You joined a private channel
