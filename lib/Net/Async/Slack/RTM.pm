@@ -169,7 +169,7 @@ sub send_message {
     my ($self, %args) = @_;
     my $id = $self->next_id($args{id});
     my $f = $self->loop->new_future;
-	$self->ws->send_frame(
+    $self->ws->send_frame(
         buffer => $json->encode({
             type    => 'message',
             id      => $id,
@@ -285,7 +285,7 @@ sub ping_timer {
 sub trigger_ping {
     my ($self, %args) = @_;
     my $id = $self->next_id($args{id});
-	$self->ws->send_frame(
+    $self->ws->send_frame(
         buffer => $json->encode({
             type    => 'ping',
             id      => $id,
