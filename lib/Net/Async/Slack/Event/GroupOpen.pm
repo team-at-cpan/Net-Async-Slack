@@ -9,7 +9,7 @@ use Net::Async::Slack::EventType;
 
 =head1 NAME
 
-Net::Async::Slack::Event::GroupOpen - You opened a private channel
+Net::Async::Slack::Event::GroupOpen - You created a group DM
 
 =head1 DESCRIPTION
 
@@ -23,3 +23,12 @@ sub type { 'group_open' }
 
 1;
 
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <TEAM@cpan.org>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2016-2019. Licensed under the same terms as Perl itself.

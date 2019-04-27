@@ -17,7 +17,9 @@ Example input data:
 
     {
         "type": "group_joined",
-        "channel": { ... }
+        "channel": {
+            …
+        }
     }
 
 
@@ -27,3 +29,12 @@ sub type { 'group_joined' }
 
 1;
 
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <TEAM@cpan.org>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2016-2019. Licensed under the same terms as Perl itself.

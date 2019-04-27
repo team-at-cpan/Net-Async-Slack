@@ -5,6 +5,8 @@ use warnings;
 
 # VERSION
 
+use Net::Async::Slack::EventType;
+
 =head1 NAME
 
 Net::Async::Slack::Event::ReconnectURL - Experimental
