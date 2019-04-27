@@ -241,7 +241,7 @@ sub oauth_request {
     my $uri = $self->endpoint(
         'oauth',
         client_id => $self->client_id,
-        scope     => 'bot',
+        scope     => 'bot,channels:write',
         state     => $state,
         %args,
     );
