@@ -3,6 +3,8 @@ package Net::Async::Slack::Event::GroupJoined;
 use strict;
 use warnings;
 
+use utf8;
+
 # VERSION
 
 use Net::Async::Slack::EventType;
