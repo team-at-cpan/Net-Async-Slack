@@ -9,7 +9,7 @@ use utf8;
 
 use Net::Async::Slack::EventType;
 
-=encoding UTF-8
+=encoding utf8
 
 =head1 NAME
 
