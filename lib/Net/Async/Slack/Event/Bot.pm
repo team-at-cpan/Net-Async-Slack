@@ -14,7 +14,7 @@ use warnings;
       "app_id": "A4H1JB4AZ",
       "name": "hugbot",
       "icons": {
-       "image_48": "https:\/\/slack.com\/path\/to\/hugbot_48.png"
+       "image_48": "url here"
       }
      }
     }
