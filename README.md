@@ -1,6 +1,6 @@
 # NAME
 
-Net::Async::Slack - support for the [https://slack.com](https://slack.com) APIs with [IO::Async](https://metacpan.org/pod/IO::Async)
+Net::Async::Slack - support for the [https://slack.com](https://slack.com) APIs with [IO::Async](https://metacpan.org/pod/IO%3A%3AAsync)
 
 # SYNOPSIS
 
@@ -25,7 +25,7 @@ See the `examples/` directory for usage.
 ## rtm
 
 Establishes a connection to the Slack RTM websocket API, and
-resolves to a [Net::Async::Slack::RTM](https://metacpan.org/pod/Net::Async::Slack::RTM) instance.
+resolves to a [Net::Async::Slack::RTM](https://metacpan.org/pod/Net%3A%3AAsync%3A%3ASlack%3A%3ARTM) instance.
 
 ## send\_message
 
@@ -48,6 +48,25 @@ and the following named boolean parameters:
 
 Returns a [Future](https://metacpan.org/pod/Future), although the content of the response is subject to change.
 
+## conversations\_info
+
+Provide information about a channel.
+
+Takes the following named parameters:
+
+- `channel` - the channel ID to look up
+
+and returns a [Future](https://metacpan.org/pod/Future) which will resolve to a hashref containing
+`{ channel => { name => '...' } }`.
+
+## join\_channel
+
+Attempt to join the given channel.
+
+Takes the following named parameters:
+
+- `channel` - the channel ID or name to join
+
 # METHODS - Internal
 
 ## endpoints
@@ -69,7 +88,7 @@ API token.
 
 Returns the HTTP instance used for communicating with the API.
 
-Currently autocreates a [Net::Async::HTTP](https://metacpan.org/pod/Net::Async::HTTP) instance.
+Currently autocreates a [Net::Async::HTTP](https://metacpan.org/pod/Net%3A%3AAsync%3A%3AHTTP) instance.
 
 ## http\_get
 
@@ -81,11 +100,11 @@ Issues an HTTP POST request.
 
 # SEE ALSO
 
-- [AnyEvent::SlackRTM](https://metacpan.org/pod/AnyEvent::SlackRTM) - low-level API wrapper around RTM
-- [Mojo::SlackRTM](https://metacpan.org/pod/Mojo::SlackRTM) - another RTM-specific wrapper, this time based on Mojolicious
-- [Slack::RTM::Bot](https://metacpan.org/pod/Slack::RTM::Bot) - more RTM support, this time via LWP and a subprocess/thread for handling the websocket part
-- [WebService::Slack::WebApi](https://metacpan.org/pod/WebService::Slack::WebApi) - Furl-based wrapper around the REST API
-- [AnyEvent::SlackBot](https://metacpan.org/pod/AnyEvent::SlackBot) - another AnyEvent RTM implementation
+- [AnyEvent::SlackRTM](https://metacpan.org/pod/AnyEvent%3A%3ASlackRTM) - low-level API wrapper around RTM
+- [Mojo::SlackRTM](https://metacpan.org/pod/Mojo%3A%3ASlackRTM) - another RTM-specific wrapper, this time based on Mojolicious
+- [Slack::RTM::Bot](https://metacpan.org/pod/Slack%3A%3ARTM%3A%3ABot) - more RTM support, this time via LWP and a subprocess/thread for handling the websocket part
+- [WebService::Slack::WebApi](https://metacpan.org/pod/WebService%3A%3ASlack%3A%3AWebApi) - Furl-based wrapper around the REST API
+- [AnyEvent::SlackBot](https://metacpan.org/pod/AnyEvent%3A%3ASlackBot) - another AnyEvent RTM implementation
 
 # AUTHOR
 
@@ -93,4 +112,4 @@ Tom Molesworth <TEAM@cpan.org>
 
 # LICENSE
 
-Copyright Tom Molesworth 2016-2017. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2016-2020. Licensed under the same terms as Perl itself.
