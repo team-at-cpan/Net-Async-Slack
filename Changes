@@ -2,6 +2,13 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    New features:
+
+    - ->conversations_info for channel lookup
+
+    Bugs fixed:
+
+    - RTM connection handling fixed
 
 0.002     2017-10-22 17:03:30+08:00 Asia/Kuala_Lumpur
     New features:

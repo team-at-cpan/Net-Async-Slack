@@ -4,7 +4,7 @@ package Net::Async::Slack;
 use strict;
 use warnings;
 
-our $VERSION = '0.002';
+our $VERSION = '0.003';
 
 use parent qw(IO::Async::Notifier);
 
@@ -162,6 +162,36 @@ sub send_message {
     })
 }
 
+=head2 conversations_info
+
+Provide information about a channel.
+
+Takes the following named parameters:
+
+=over 4
+
+=item * C<channel> - the channel ID to look up
+
+=back
+
+and returns a L<Future> which will resolve to a hashref containing
+C<< { channel => { name => '...' } } >>.
+
+=cut
+
+sub conversations_info {
+    my ($self, %args) = @_;
+    my @content;
+    push @content, token => $self->token;
+    push @content, channel => $args{channel} || die 'need a channel';
+    return $self->http_post(
+        $self->endpoint(
+            'conversations.info',
+        ),
+        \@content,
+    )
+}
+
 =head1 METHODS - Internal
 
 =head2 endpoints
@@ -196,7 +226,7 @@ passed to the method.
 sub endpoint {
     my ($self, $endpoint, %args) = @_;
     my $uri = URI::Template->new($self->endpoints->{$endpoint . '_url'})->process(%args);
-    $uri->host($self->slack_host);
+    $uri->host($self->slack_host) if $self->slack_host;
     $uri
 }
 
@@ -260,8 +290,9 @@ sub http {
         $self->add_child(
             my $ua = Net::Async::HTTP->new(
                 fail_on_error            => 1,
+                close_after_request      => 1,
                 max_connections_per_host => 2,
-                pipeline                 => 1,
+                pipeline                 => 0,
                 max_in_flight            => 8,
                 decode_content           => 1,
                 timeout                  => 30,
