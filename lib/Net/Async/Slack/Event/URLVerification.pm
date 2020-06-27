@@ -1,4 +1,4 @@
-package Net::Async::Slack::Event::UrlVerification;
+package Net::Async::Slack::Event::URLVerification;
 
 use strict;
 use warnings;
@@ -9,7 +9,7 @@ use Net::Async::Slack::EventType;
 
 =head1 NAME
 
-Net::Async::Slack::Event::UrlVerification - Verifies ownership of an Events API Request URL
+Net::Async::Slack::Event::URLVerification - Verifies ownership of an Events API Request URL
 
 =head1 DESCRIPTION
 
@@ -28,3 +28,12 @@ sub type { 'url_verification' }
 
 1;
 
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <TEAM@cpan.org>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2016-2019. Licensed under the same terms as Perl itself.

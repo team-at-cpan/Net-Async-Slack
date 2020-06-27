@@ -11,17 +11,17 @@ use Net::Async::Slack::EventType;
 
 =head1 DESCRIPTION
 
-{
- "type": "bot_changed",
- "bot": {
-  "id": "B024BE7LH",
-  "app_id": "A4H1JB4AZ",
-  "name": "hugbot",
-  "icons": {
-   "image_48": "https:\/\/slack.com\/path\/to\/hugbot_48.png"
-  }
- }
-}
+    {
+     "type": "bot_changed",
+     "bot": {
+      "id": "B024BE7LH",
+      "app_id": "A4H1JB4AZ",
+      "name": "hugbot",
+      "icons": {
+       "image_48": "url here"
+      }
+     }
+    }
 
 =cut
 

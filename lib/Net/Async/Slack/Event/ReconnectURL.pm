@@ -5,18 +5,24 @@ use warnings;
 
 # VERSION
 
-use Net::Async::Slack::EventType;
+=head1 NAME
+
+Net::Async::Slack::Event::ReconnectURL - Experimental
 
 =head1 DESCRIPTION
 
-{
-"type":"reconnect_url",
-"url":"wss://mpmulti-9w2u.slack-msgs.com/websocket/Sjb...zNIE="
-}
+Example input data:
+
+    {
+        "type": "reconnect_url"
+    }
+
 
 =cut
 
 use URI;
+
+use Net::Async::Slack::EventType;
 
 sub url { shift->{url} }
 

@@ -27,3 +27,12 @@ sub type { 'manual_presence_change' }
 
 1;
 
+__END__
+
+=head1 AUTHOR
+
+Tom Molesworth <TEAM@cpan.org>
+
+=head1 LICENSE
+
+Copyright Tom Molesworth 2016-2019. Licensed under the same terms as Perl itself.

@@ -10,6 +10,14 @@ Revision history for {{$dist->name}}
 
     - RTM connection handling fixed
 
+0.003     2019-04-28 06:03:53+08:00 Asia/Kuala_Lumpur
+    No new features.
+
+    Bug fixes:
+
+    - duplicate ::ReconnectUrl and ::ReconnectURL packages were present,
+    only one of them is actually needed (thanks to NEILB for reporting)
+
 0.002     2017-10-22 17:03:30+08:00 Asia/Kuala_Lumpur
     New features:
 

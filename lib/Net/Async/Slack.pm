@@ -196,6 +196,34 @@ sub conversations_info {
     )
 }
 
+=head2 join_channel
+
+Attempt to join the given channel.
+
+Takes the following named parameters:
+
+=over 4
+
+=item * C<channel> - the channel ID or name to join
+
+=back
+
+=cut
+
+sub join_channel {
+    my ($self, %args) = @_;
+    die 'You need to pass a channel name' unless $args{channel};
+    my @content;
+    push @content, token => $self->token;
+    push @content, name => $args{channel};
+    $self->http_post(
+        $self->endpoint(
+            'channels.join',
+        ),
+        \@content,
+    )
+}
+
 =head1 METHODS - Internal
 
 =head2 endpoints
@@ -261,7 +289,7 @@ sub oauth_request {
     my $uri = $self->endpoint(
         'oauth',
         client_id => $self->client_id,
-        scope     => 'bot',
+        scope     => 'bot,channels:write',
         state     => $state,
         %args,
     );
