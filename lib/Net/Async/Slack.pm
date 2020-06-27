@@ -74,6 +74,10 @@ resolves to a L<Net::Async::Slack::RTM> instance.
 
 sub rtm {
     my ($self, %args) = @_;
+    $log->tracef('Endpoint is %s', $self->endpoint(
+        'rtm_connect',
+        token => $self->token
+    ));
     $self->{rtm} //= $self->http_get(
         uri => URI->new(
             $self->endpoint(

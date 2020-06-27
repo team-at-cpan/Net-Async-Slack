@@ -200,17 +200,9 @@ sub connect {
             on_frame => $self->curry::weak::on_frame,
         )
     );
+    $log->tracef('URL for websockets will be %s', "$uri");
     $self->{ws}->connect(
         url        => "$uri",
-        host       => $uri->host,
-        ($uri->scheme eq 'wss'
-        ? (
-            service      => 443,
-            extensions   => [ qw(SSL) ],
-            SSL_hostname => $uri->host,
-        ) : (
-            service    => 80,
-        ))
     )
 }
 
