@@ -147,6 +147,7 @@ sub send_message {
     push @content, channel => $args{channel} || die 'need a channel';
     push @content, text => $args{text} if defined $args{text};
     push @content, attachments => $json->encode($args{attachments}) if $args{attachments};
+    push @content, blocks => $json->encode($args{blocks}) if $args{blocks};
     push @content, $_ => $args{$_} for grep exists $args{$_}, qw(parse link_names unfurl_links unfurl_media as_user reply_broadcast thread_ts);
     $self->http_post(
         $self->endpoint(
