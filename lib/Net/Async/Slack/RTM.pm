@@ -293,7 +293,7 @@ sub ping_timer {
         $self->add_child(
             my $timer = IO::Async::Timer::Countdown->new(
                 delay => 10,
-                on_expire => $self->curry::weak::trigger_ping,
+                on_expire => $self->$curry::weak(sub { shift->trigger_ping }),
             )
         );
         $timer
