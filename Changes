@@ -2,6 +2,14 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    New features:
+
+    - support for blocks in `->send_message`
+
+    Bugs fixed:
+
+    - warning from the `->trigger_ping` method which was passing through
+    an uneven list of parameters
 
 0.004     2020-06-27 23:43:38+08:00 Asia/Kuala_Lumpur
     New features:
