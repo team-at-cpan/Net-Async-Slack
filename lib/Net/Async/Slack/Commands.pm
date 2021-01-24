@@ -18,6 +18,7 @@ from the API specification.
 =cut
 
 use Future::AsyncAwait;
+use JSON::MaybeUTF8 qw(:v1);
 
 =head2 admin_apps_approve
 
@@ -46,12 +47,13 @@ async sub admin_apps_approve {
     my $uri = $self->endpoint(
         'admin_apps_approve',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(app_id request_id team_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -159,12 +161,13 @@ async sub admin_apps_restrict {
     my $uri = $self->endpoint(
         'admin_apps_restrict',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(app_id request_id team_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -232,12 +235,13 @@ async sub admin_conversations_archive {
     my $uri = $self->endpoint(
         'admin_conversations_archive',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -267,12 +271,13 @@ async sub admin_conversations_convert_to_private {
     my $uri = $self->endpoint(
         'admin_conversations_convert_to_private',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -310,12 +315,13 @@ async sub admin_conversations_create {
     my $uri = $self->endpoint(
         'admin_conversations_create',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name description is_private org_wide team_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -345,12 +351,13 @@ async sub admin_conversations_delete {
     my $uri = $self->endpoint(
         'admin_conversations_delete',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -382,12 +389,13 @@ async sub admin_conversations_disconnect_shared {
     my $uri = $self->endpoint(
         'admin_conversations_disconnect_shared',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id leaving_team_ids)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -454,10 +462,14 @@ async sub admin_conversations_get_conversation_prefs {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_conversations_get_conversation_prefs',
-        %args{grep { exists $args{$_} } qw(channel_id)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(channel_id)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -490,10 +502,14 @@ async sub admin_conversations_get_teams {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_conversations_get_teams',
-        %args{grep { exists $args{$_} } qw(channel_id cursor limit)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(channel_id cursor limit)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -525,12 +541,13 @@ async sub admin_conversations_invite {
     my $uri = $self->endpoint(
         'admin_conversations_invite',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(user_ids channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -562,12 +579,13 @@ async sub admin_conversations_rename {
     my $uri = $self->endpoint(
         'admin_conversations_rename',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -601,12 +619,13 @@ async sub admin_conversations_restrict_access_add_group {
     my $uri = $self->endpoint(
         'admin_conversations_restrict_access_add_group',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id group_id channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -674,12 +693,13 @@ async sub admin_conversations_restrict_access_remove_group {
     my $uri = $self->endpoint(
         'admin_conversations_restrict_access_remove_group',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id group_id channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -720,10 +740,14 @@ async sub admin_conversations_search {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_conversations_search',
-        %args{grep { exists $args{$_} } qw(team_ids query limit cursor search_channel_types sort sort_dir)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(team_ids query limit cursor search_channel_types sort sort_dir)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     return $res;
 }
@@ -754,12 +778,13 @@ async sub admin_conversations_set_conversation_prefs {
     my $uri = $self->endpoint(
         'admin_conversations_set_conversation_prefs',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id prefs)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -795,12 +820,13 @@ async sub admin_conversations_set_teams {
     my $uri = $self->endpoint(
         'admin_conversations_set_teams',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id team_id target_team_ids org_channel)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -830,12 +856,13 @@ async sub admin_conversations_unarchive {
     my $uri = $self->endpoint(
         'admin_conversations_unarchive',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -867,12 +894,13 @@ async sub admin_emoji_add {
     my $uri = $self->endpoint(
         'admin_emoji_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name url)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -904,12 +932,13 @@ async sub admin_emoji_add_alias {
     my $uri = $self->endpoint(
         'admin_emoji_add_alias',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name alias_for)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -973,12 +1002,13 @@ async sub admin_emoji_remove {
     my $uri = $self->endpoint(
         'admin_emoji_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1010,12 +1040,13 @@ async sub admin_emoji_rename {
     my $uri = $self->endpoint(
         'admin_emoji_rename',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name new_name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1047,12 +1078,13 @@ async sub admin_invite_requests_approve {
     my $uri = $self->endpoint(
         'admin_invite_requests_approve',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id invite_request_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1085,10 +1117,14 @@ async sub admin_invite_requests_approved_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_invite_requests_approved_list',
-        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1121,10 +1157,14 @@ async sub admin_invite_requests_denied_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_invite_requests_denied_list',
-        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1156,12 +1196,13 @@ async sub admin_invite_requests_deny {
     my $uri = $self->endpoint(
         'admin_invite_requests_deny',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id invite_request_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1194,10 +1235,14 @@ async sub admin_invite_requests_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_invite_requests_list',
-        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1269,12 +1314,13 @@ async sub admin_teams_create {
     my $uri = $self->endpoint(
         'admin_teams_create',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_domain team_name team_description team_discoverability)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1305,10 +1351,14 @@ async sub admin_teams_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_teams_list',
-        %args{grep { exists $args{$_} } qw(limit cursor)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(limit cursor)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1373,10 +1423,14 @@ async sub admin_teams_settings_info {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_teams_settings_info',
-        %args{grep { exists $args{$_} } qw(team_id)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(team_id)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1408,12 +1462,13 @@ async sub admin_teams_settings_set_default_channels {
     my $uri = $self->endpoint(
         'admin_teams_settings_set_default_channels',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id channel_ids)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1445,12 +1500,13 @@ async sub admin_teams_settings_set_description {
     my $uri = $self->endpoint(
         'admin_teams_settings_set_description',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id description)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1482,12 +1538,13 @@ async sub admin_teams_settings_set_discoverability {
     my $uri = $self->endpoint(
         'admin_teams_settings_set_discoverability',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id discoverability)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1519,12 +1576,13 @@ async sub admin_teams_settings_set_icon {
     my $uri = $self->endpoint(
         'admin_teams_settings_set_icon',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(image_url team_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1556,12 +1614,13 @@ async sub admin_teams_settings_set_name {
     my $uri = $self->endpoint(
         'admin_teams_settings_set_name',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1595,12 +1654,13 @@ async sub admin_usergroups_add_channels {
     my $uri = $self->endpoint(
         'admin_usergroups_add_channels',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(usergroup_id team_id channel_ids)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1634,12 +1694,13 @@ async sub admin_usergroups_add_teams {
     my $uri = $self->endpoint(
         'admin_usergroups_add_teams',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(usergroup_id team_ids auto_provision)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1672,10 +1733,14 @@ async sub admin_usergroups_list_channels {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_usergroups_list_channels',
-        %args{grep { exists $args{$_} } qw(usergroup_id team_id include_num_members)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(usergroup_id team_id include_num_members)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1707,12 +1772,13 @@ async sub admin_usergroups_remove_channels {
     my $uri = $self->endpoint(
         'admin_usergroups_remove_channels',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(usergroup_id channel_ids)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1750,12 +1816,13 @@ async sub admin_users_assign {
     my $uri = $self->endpoint(
         'admin_users_assign',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id user_id is_restricted is_ultra_restricted channel_ids)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1801,12 +1868,13 @@ async sub admin_users_invite {
     my $uri = $self->endpoint(
         'admin_users_invite',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id email channel_ids custom_message real_name resend is_restricted is_ultra_restricted guest_expiration_ts)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1839,10 +1907,14 @@ async sub admin_users_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'admin_users_list',
-        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(team_id cursor limit)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1874,12 +1946,13 @@ async sub admin_users_remove {
     my $uri = $self->endpoint(
         'admin_users_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id user_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1911,12 +1984,13 @@ async sub admin_users_session_invalidate {
     my $uri = $self->endpoint(
         'admin_users_session_invalidate',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id session_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1950,12 +2024,13 @@ async sub admin_users_session_reset {
     my $uri = $self->endpoint(
         'admin_users_session_reset',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(user_id mobile_only web_only)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -1987,12 +2062,13 @@ async sub admin_users_set_admin {
     my $uri = $self->endpoint(
         'admin_users_set_admin',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id user_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2026,12 +2102,13 @@ async sub admin_users_set_expiration {
     my $uri = $self->endpoint(
         'admin_users_set_expiration',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id user_id expiration_ts)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2063,12 +2140,13 @@ async sub admin_users_set_owner {
     my $uri = $self->endpoint(
         'admin_users_set_owner',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id user_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2100,12 +2178,13 @@ async sub admin_users_set_regular {
     my $uri = $self->endpoint(
         'admin_users_set_regular',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(team_id user_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2136,10 +2215,14 @@ async sub api_test {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'api_test',
-        %args{grep { exists $args{$_} } qw(error foo)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(error foo)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2172,10 +2255,14 @@ async sub apps_event_authorizations_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'apps_event_authorizations_list',
-        %args{grep { exists $args{$_} } qw(event_context cursor limit)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(event_context cursor limit)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2447,7 +2534,7 @@ async sub auth_test {
     my $uri = $self->endpoint(
         'auth_test',
     );
-    my ($res) = await $self->http_get(
+    my ($res) = await $self->http_post(
         $uri,
     );
     die $res unless $res->{ok};
@@ -2524,12 +2611,13 @@ async sub calls_add {
     my $uri = $self->endpoint(
         'calls_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(external_unique_id external_display_id join_url desktop_app_join_url date_start title created_by users)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2561,12 +2649,13 @@ async sub calls_end {
     my $uri = $self->endpoint(
         'calls_end',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(id duration)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2595,10 +2684,14 @@ async sub calls_info {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'calls_info',
-        %args{grep { exists $args{$_} } qw(id)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(id)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2630,12 +2723,13 @@ async sub calls_participants_add {
     my $uri = $self->endpoint(
         'calls_participants_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(id users)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2667,12 +2761,13 @@ async sub calls_participants_remove {
     my $uri = $self->endpoint(
         'calls_participants_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(id users)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2708,12 +2803,13 @@ async sub calls_update {
     my $uri = $self->endpoint(
         'calls_update',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(id title join_url desktop_app_join_url)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2747,12 +2843,13 @@ async sub chat_delete {
     my $uri = $self->endpoint(
         'chat_delete',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(ts channel as_user)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2786,12 +2883,13 @@ async sub chat_delete_scheduled_message {
     my $uri = $self->endpoint(
         'chat_delete_scheduled_message',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(as_user channel scheduled_message_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2857,12 +2955,13 @@ async sub chat_me_message {
     my $uri = $self->endpoint(
         'chat_me_message',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel text)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2914,12 +3013,13 @@ async sub chat_post_ephemeral {
     my $uri = $self->endpoint(
         'chat_post_ephemeral',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(as_user attachments blocks channel icon_emoji icon_url link_names parse text thread_ts user username)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -2977,12 +3077,13 @@ async sub chat_post_message {
     my $uri = $self->endpoint(
         'chat_post_message',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(as_user attachments blocks channel icon_emoji icon_url link_names mrkdwn parse reply_broadcast text thread_ts unfurl_links unfurl_media username)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3034,12 +3135,13 @@ async sub chat_schedule_message {
     my $uri = $self->endpoint(
         'chat_schedule_message',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel text post_at parse as_user link_names attachments blocks unfurl_links unfurl_media thread_ts reply_broadcast)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3076,10 +3178,14 @@ async sub chat_scheduled_messages_list {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'chat_scheduled_messages_list',
-        %args{grep { exists $args{$_} } qw(channel latest oldest limit cursor)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(channel latest oldest limit cursor)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3119,12 +3225,13 @@ async sub chat_unfurl {
     my $uri = $self->endpoint(
         'chat_unfurl',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel ts unfurls user_auth_message user_auth_required user_auth_url)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3168,12 +3275,13 @@ async sub chat_update {
     my $uri = $self->endpoint(
         'chat_update',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(as_user attachments blocks channel link_names parse text ts)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3203,12 +3311,13 @@ async sub conversations_archive {
     my $uri = $self->endpoint(
         'conversations_archive',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3238,12 +3347,13 @@ async sub conversations_close {
     my $uri = $self->endpoint(
         'conversations_close',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3275,12 +3385,13 @@ async sub conversations_create {
     my $uri = $self->endpoint(
         'conversations_create',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name is_private)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3390,12 +3501,13 @@ async sub conversations_invite {
     my $uri = $self->endpoint(
         'conversations_invite',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel users)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3425,12 +3537,13 @@ async sub conversations_join {
     my $uri = $self->endpoint(
         'conversations_join',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3462,12 +3575,13 @@ async sub conversations_kick {
     my $uri = $self->endpoint(
         'conversations_kick',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel user)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3497,12 +3611,13 @@ async sub conversations_leave {
     my $uri = $self->endpoint(
         'conversations_leave',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3572,12 +3687,13 @@ async sub conversations_mark {
     my $uri = $self->endpoint(
         'conversations_mark',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel ts)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3647,12 +3763,13 @@ async sub conversations_open {
     my $uri = $self->endpoint(
         'conversations_open',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel users return_im)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3684,12 +3801,13 @@ async sub conversations_rename {
     my $uri = $self->endpoint(
         'conversations_rename',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3765,12 +3883,13 @@ async sub conversations_set_purpose {
     my $uri = $self->endpoint(
         'conversations_set_purpose',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel purpose)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3802,12 +3921,13 @@ async sub conversations_set_topic {
     my $uri = $self->endpoint(
         'conversations_set_topic',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel topic)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3837,12 +3957,13 @@ async sub conversations_unarchive {
     my $uri = $self->endpoint(
         'conversations_unarchive',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3873,10 +3994,14 @@ async sub dialog_open {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'dialog_open',
-        %args{grep { exists $args{$_} } qw(dialog trigger_id)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(dialog trigger_id)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -3984,12 +4109,13 @@ async sub dnd_set_snooze {
     my $uri = $self->endpoint(
         'dnd_set_snooze',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(num_minutes)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4076,12 +4202,13 @@ async sub files_comments_delete {
     my $uri = $self->endpoint(
         'files_comments_delete',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4111,12 +4238,13 @@ async sub files_delete {
     my $uri = $self->endpoint(
         'files_delete',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4242,12 +4370,13 @@ async sub files_remote_add {
     my $uri = $self->endpoint(
         'files_remote_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(external_id title filetype external_url preview_image indexable_file_contents)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4353,12 +4482,13 @@ async sub files_remote_remove {
     my $uri = $self->endpoint(
         'files_remote_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file external_id)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4436,12 +4566,13 @@ async sub files_remote_update {
     my $uri = $self->endpoint(
         'files_remote_update',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file external_id title filetype external_url preview_image indexable_file_contents)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4471,12 +4602,13 @@ async sub files_revoke_public_url {
     my $uri = $self->endpoint(
         'files_revoke_public_url',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4506,12 +4638,13 @@ async sub files_shared_public_url {
     my $uri = $self->endpoint(
         'files_shared_public_url',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4555,12 +4688,13 @@ async sub files_upload {
     my $uri = $self->endpoint(
         'files_upload',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(file content filetype filename title initial_comment channels thread_ts)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4746,12 +4880,13 @@ async sub pins_add {
     my $uri = $self->endpoint(
         'pins_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel timestamp)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4814,12 +4949,13 @@ async sub pins_remove {
     my $uri = $self->endpoint(
         'pins_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel timestamp)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4853,12 +4989,13 @@ async sub reactions_add {
     my $uri = $self->endpoint(
         'reactions_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel name timestamp)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -4977,12 +5114,13 @@ async sub reactions_remove {
     my $uri = $self->endpoint(
         'reactions_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name file file_comment channel timestamp)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5016,12 +5154,13 @@ async sub reminders_add {
     my $uri = $self->endpoint(
         'reminders_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(text time user)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5051,12 +5190,13 @@ async sub reminders_complete {
     my $uri = $self->endpoint(
         'reminders_complete',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(reminder)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5086,12 +5226,13 @@ async sub reminders_delete {
     my $uri = $self->endpoint(
         'reminders_delete',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(reminder)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5258,12 +5399,13 @@ async sub stars_add {
     my $uri = $self->endpoint(
         'stars_add',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel file file_comment timestamp)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5337,12 +5479,13 @@ async sub stars_remove {
     my $uri = $self->endpoint(
         'stars_remove',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channel file file_comment timestamp)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5554,12 +5697,13 @@ async sub usergroups_create {
     my $uri = $self->endpoint(
         'usergroups_create',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(channels description handle include_count name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5591,12 +5735,13 @@ async sub usergroups_disable {
     my $uri = $self->endpoint(
         'usergroups_disable',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(include_count usergroup)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5628,12 +5773,13 @@ async sub usergroups_enable {
     my $uri = $self->endpoint(
         'usergroups_enable',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(include_count usergroup)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5709,12 +5855,13 @@ async sub usergroups_update {
     my $uri = $self->endpoint(
         'usergroups_update',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(handle description channels include_count usergroup name)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -5782,12 +5929,13 @@ async sub usergroups_users_update {
     my $uri = $self->endpoint(
         'usergroups_users_update',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(include_count usergroup users)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6076,12 +6224,13 @@ async sub users_profile_set {
     my $uri = $self->endpoint(
         'users_profile_set',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(name profile user value)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6140,12 +6289,13 @@ async sub users_set_photo {
     my $uri = $self->endpoint(
         'users_set_photo',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(crop_w crop_x crop_y image)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6175,12 +6325,13 @@ async sub users_set_presence {
     my $uri = $self->endpoint(
         'users_set_presence',
     );
-    my $content = [
+    my $content = encode_json_utf8({
         %args{grep { exists $args{$_} } qw(presence)}
-    ];
+    });
     my ($res) = await $self->http_post(
         $uri,
         $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6211,10 +6362,14 @@ async sub views_open {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'views_open',
-        %args{grep { exists $args{$_} } qw(trigger_id view)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(trigger_id view)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6247,10 +6402,14 @@ async sub views_publish {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'views_publish',
-        %args{grep { exists $args{$_} } qw(user_id view hash)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(user_id view hash)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6281,10 +6440,14 @@ async sub views_push {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'views_push',
-        %args{grep { exists $args{$_} } qw(trigger_id view)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(trigger_id view)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6319,10 +6482,14 @@ async sub views_update {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'views_update',
-        %args{grep { exists $args{$_} } qw(view_id external_id view hash)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(view_id external_id view hash)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6353,10 +6520,14 @@ async sub workflows_step_completed {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'workflows_step_completed',
-        %args{grep { exists $args{$_} } qw(workflow_step_execute_id outputs)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(workflow_step_execute_id outputs)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6387,10 +6558,14 @@ async sub workflows_step_failed {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'workflows_step_failed',
-        %args{grep { exists $args{$_} } qw(workflow_step_execute_id error)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(workflow_step_execute_id error)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
@@ -6427,10 +6602,14 @@ async sub workflows_update_step {
     my ($self, %args) = @_;
     my $uri = $self->endpoint(
         'workflows_update_step',
-        %args{grep { exists $args{$_} } qw(workflow_step_edit_id inputs outputs step_name step_image_url)}
     );
-    my ($res) = await $self->http_get(
+    my $content = encode_json_utf8({
+        %args{grep { exists $args{$_} } qw(workflow_step_edit_id inputs outputs step_name step_image_url)}
+    });
+    my ($res) = await $self->http_post(
         $uri,
+        $content,
+        content_type => 'application/json; charset=utf-8',
     );
     die $res unless $res->{ok};
     return $res;
