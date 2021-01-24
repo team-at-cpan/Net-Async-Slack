@@ -45,6 +45,7 @@ use Net::Async::Slack::Event::AppHomeOpened;
 use Net::Async::Slack::Event::AppMention;
 use Net::Async::Slack::Event::AppRateLimited;
 use Net::Async::Slack::Event::AppUninstalled;
+use Net::Async::Slack::Event::BlockActions;
 use Net::Async::Slack::Event::BotAdded;
 use Net::Async::Slack::Event::BotChanged;
 use Net::Async::Slack::Event::Bot;
@@ -255,11 +256,14 @@ sub on_frame {
                     $log->tracef("Have event [%s], emitting", $ev->type);
                     $self->events->emit($ev);
                 } else {
-                    my $ev = Net::Async::Slack::EventType->from_json(
+                    if(my $ev = Net::Async::Slack::EventType->from_json(
                         $data->{payload}
-                    );
-                    $log->tracef("Have event [%s], emitting", $ev->type);
-                    $self->events->emit($ev);
+                    )) {
+                        $log->tracef("Have event [%s], emitting", $ev->type);
+                        $self->events->emit($ev);
+                    } else {
+                        $log->errorf('Failed to locate event type from payload %s', $data->{payload});
+                    }
                 }
             }
         } catch {
