@@ -1,8 +1,12 @@
 {
-   "oauth_url" : "https://slack.com/oauth/authorize{?client_id,scope,redirect_uri,state,team}",
-   "rtm_connect_url": "https://slack.com/api/rtm.connect{?token}",
-   "chat.postMessage_url": "https://slack.com/api/chat.postMessage{?token}",
-   "conversations.info_url": "https://slack.com/api/conversations.info{?token}",
-   "chat.update_url": "https://slack.com/api/chat.update{?token}",
-   "channels.join_url": "https://slack.com/api/channels.join{?token,name,validate}"
+   "oauth" : "https://slack.com/oauth/authorize{?client_id,scope,redirect_uri,state,team}",
+   "rtm_connect": "https://slack.com/api/rtm.connect{?token}",
+   "chat.postMessage": "https://slack.com/api/chat.postMessage{?token}",
+   "conversations.info": "https://slack.com/api/conversations.info{?token}",
+   "chat.update": "https://slack.com/api/chat.update{?token}",
+   "channels.join": "https://slack.com/api/channels.join{?token,name,validate}",
+   "apps.connections.open": "https://slack.com/api/apps.connections.open",
+   "views.publish": "https://slack.com/api/apps.connections.open",
+   "chat.unfurl": "https://slack.com/api/chat.unfurl",
+   "conversations.history": "https://slack.com/api/conversations.history{?token,channel,cursor,inclusive,latest,limit,oldest}"
 }
