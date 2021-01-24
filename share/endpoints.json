@@ -56,6 +56,7 @@
    "admin_users_set_owner" : "https://slack.com/api/admin.users.setOwner",
    "admin_users_set_regular" : "https://slack.com/api/admin.users.setRegular",
    "api_test" : "https://slack.com/api/api.test{?error,foo}",
+   "apps_connections_open": "https://slack.com/api/apps.connections.open",
    "apps_event_authorizations_list" : "https://slack.com/api/apps.event.authorizations.list{?event_context,cursor,limit}",
    "apps_permissions_info" : "https://slack.com/api/apps.permissions.info",
    "apps_permissions_request" : "https://slack.com/api/apps.permissions.request{?scopes,trigger_id}",
