@@ -450,7 +450,7 @@ sub http_post {
 async sub socket {
     my ($self) = @_;
     my $uri = $self->endpoint(
-        'apps.connections.open',
+        'apps_connections_open',
     ) or die 'no endpoint';
     my $res = await $self->http_post(
         $uri,
