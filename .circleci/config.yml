@@ -1,0 +1,26 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+    - image: tm604/perl-dzil
+    steps:
+    - checkout
+    - restore_cache:
+        key: cpan-{{ checksum "cpanfile" }}
+    - run:
+        command: |
+          cpanm -n $(dzil authordeps)
+          cpanm -n --installdeps --with-develop .
+        name: Install deps
+    - save_cache:
+        key: cpan-{{ checksum "cpanfile" }}
+        paths:
+            - /usr/local/lib/perl5/site_perl
+    - run:
+        command: |
+          perl Makefile.PL && make && make test
+        name: Run tests
+    - run:
+        command: |
+          cover -test -report coveralls
+        name: Coverage
