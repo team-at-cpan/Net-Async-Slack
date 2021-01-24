@@ -447,22 +447,6 @@ sub http_post {
     })
 }
 
-async sub chat_unfurl {
-    my ($self, %args) = @_;
-    my $uri = $self->endpoint(
-        'chat.unfurl'
-    ) or die 'no endpoint';
-    die 'needs ' . $_ for grep { !exists $args{$_} } qw(
-        channel
-        ts
-        unfurls
-    );
-    return await $self->http_post(
-        $uri,
-        \%args
-    );
-}
-
 async sub socket {
     my ($self) = @_;
     my $uri = $self->endpoint(
