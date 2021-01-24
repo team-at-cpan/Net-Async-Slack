@@ -74,6 +74,7 @@ resolves to a L<Net::Async::Slack::RTM> instance.
 
 sub rtm {
     my ($self, %args) = @_;
+    warn "RTM is deprecated and will no longer be supported by slack.com, please use socket mode instead: https://slack.com/apis/connections/socket";
     $log->tracef('Endpoint is %s', $self->endpoint(
         'rtm_connect',
         token => $self->token
