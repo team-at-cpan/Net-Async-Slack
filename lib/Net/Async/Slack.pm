@@ -6,7 +6,7 @@ use warnings;
 
 our $VERSION = '0.005';
 
-use parent qw(IO::Async::Notifier);
+use parent qw(IO::Async::Notifier Net::Async::Slack::Commands);
 
 =head1 NAME
 
