@@ -102,6 +102,19 @@ sub rtm {
     })
 }
 
+async sub socket_mode {
+    my ($self, %args) = @_;
+    my ($uri) = await $self->socket;
+    $self->add_child(
+        my $socket = Net::Async::Slack::Socket->new(
+            slack => $self,
+            wss_uri => $uri,
+        )
+    );
+    await $socket->connect;
+    return $socket;
+}
+
 =head2 send_message
 
 Send a message to a user or channel.
@@ -309,6 +322,8 @@ API token.
 
 sub token { shift->{token} }
 
+sub app_token { shift->{app_token} }
+
 =head2 http
 
 Returns the HTTP instance used for communicating with the API.
@@ -374,6 +389,14 @@ sub http_get {
     })
 }
 
+sub auth_headers {
+    my ($self) = @_;
+    return {} unless $self->token;
+    return {
+        Authorization => 'Bearer ' . $self->token
+    }
+}
+
 =head2 http_post
 
 Issues an HTTP POST request.
@@ -385,16 +408,22 @@ sub http_post {
 
     $log->tracef("POST %s { %s } <= %s", "$uri", \%args, $content);
 
+    $args{headers} ||= $self->auth_headers;
+    if(ref $content eq 'HASH') {
+        $content = encode_json_utf8($content);
+        $args{content_type} = 'application/json';
+    }
     $self->http->POST(
         $uri,
         $content,
+        %args,
     )->then(sub {
         my ($resp) = @_;
         return { } if $resp->code == 204;
         return { } if 3 == ($resp->code / 100);
         try {
             $log->tracef('HTTP response for %s was %s', "$uri", $resp->as_string("\n"));
-            return Future->done($json->decode($resp->decoded_content))
+            return Future->done(decode_json_utf8($resp->content))
         } catch {
             $log->errorf("JSON decoding error %s from HTTP response %s", $@, $resp->as_string("\n"));
             return Future->fail($@ => json => $resp);
@@ -411,9 +440,41 @@ sub http_post {
     })
 }
 
+async sub chat_unfurl {
+    my ($self, %args) = @_;
+    my $uri = $self->endpoint(
+        'chat.unfurl'
+    ) or die 'no endpoint';
+    die 'needs ' . $_ for grep { !exists $args{$_} } qw(
+        channel
+        ts
+        unfurls
+    );
+    return await $self->http_post(
+        $uri,
+        \%args
+    );
+}
+
+async sub socket {
+    my ($self) = @_;
+    my $uri = $self->endpoint(
+        'apps.connections.open',
+    ) or die 'no endpoint';
+    my $res = await $self->http_post(
+        $uri,
+        [ ],
+        headers => {
+            Authorization => 'Bearer ' . $self->app_token
+        }
+    );
+    die 'failed to obtain socket-mode URL' unless $res->{ok};
+    return URI->new($res->{url});
+}
+
 sub configure {
     my ($self, %args) = @_;
-    for my $k (qw(client_id token slack_host)) {
+    for my $k (qw(client_id token app_token slack_host)) {
         $self->{$k} = delete $args{$k} if exists $args{$k};
     }
     $self->next::method(%args);
