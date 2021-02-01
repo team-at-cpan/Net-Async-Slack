@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 # VERSION
-# AUTHORITY 
+# AUTHORITY
 
 =head1 NAME
 
