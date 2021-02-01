@@ -6,6 +6,10 @@ use warnings;
 # VERSION
 # AUTHORITY
 
+use utf8;
+
+=encoding utf8
+
 =head1 NAME
 
 Net::Async::Slack::Commands - supported API methods for L<Net::Async::Slack>
