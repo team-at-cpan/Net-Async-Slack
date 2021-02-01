@@ -1147,7 +1147,7 @@ Takes the following named parameters:
 
 =item * C<team_id> - ID for the workspace where the invite requests were made. (string, optional)
 
-=item * C<cursor> - Value of the `next_cursor` field sent as part of the previous api response (string, optional)
+=item * C<cursor> - Value of the `next_cursor` field sent as part of the previous API response (string, optional)
 
 =item * C<limit> - The number of results that will be returned by the API on each invocation. Must be between 1 - 1000 both inclusive (integer, optional)
 
