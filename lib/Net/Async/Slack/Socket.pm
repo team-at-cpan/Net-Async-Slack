@@ -10,15 +10,13 @@ use parent qw(IO::Async::Notifier);
 
 =head1 NAME
 
-Net::Async::Slack::Socket - realtime messaging support for L<https://slack.com>
+Net::Async::Slack::Socket - socket-mode notifications for L<https://slack.com>
 
 =head1 DESCRIPTION
 
 This is a basic wrapper for Slack's socket-mode features.
 
-The realtime messaging API is mostly useful as an event stream. Although it is
-possible to send messages through this API as well - see L</send_message> - the
-main HTTP API offers more features.
+This provides an event stream using websockets.
 
 For a full list of events, see L<https://api.slack.com/events>.
 
@@ -167,41 +165,6 @@ sub events {
     }
 }
 
-=head2 send_message
-
-Sends a message to a user or channel.
-
-This is limited (by the Slack API) to the L<default message formatting mode|https://api.slack.com/docs/formatting>,
-so it's only useful for simple messages.
-
-Takes the following named parameters:
-
-=over 4
-
-=item * id - custom message ID (optional)
-
-=item * channel - either a L<Net::Async::Slack::Channel> instance, or a channel ID
-
-=back
-
-=cut
-
-sub send_message {
-    my ($self, %args) = @_;
-    my $id = $self->next_id($args{id});
-    my $f = $self->loop->new_future;
-    $self->ws->send_frame(
-        buffer => $json->encode({
-            type    => 'message',
-            id      => $id,
-            channel => $args{channel_id} // $args{channel}->id,
-            text    => $args{text},
-        }),
-        masked => 1
-    );
-    $self->{pending_message}{$id} = $f;
-}
-
 =head1 METHODS - Internal
 
 You may not need to call these directly. If I'm wrong and you find yourself having
@@ -219,6 +182,7 @@ async sub connect {
     $self->add_child(
         $self->{ws} = Net::Async::WebSocket::Client->new(
             on_frame => $self->curry::weak::on_frame,
+            on_ping_frame => $self->curry::weak::on_ping_frame,
         )
     );
     $log->tracef('URL for websockets will be %s', "$uri");
@@ -227,6 +191,11 @@ async sub connect {
     );
     $self->event_mangler;
     return $res;
+}
+
+sub on_ping_frame {
+    my ($self, $ws, $bytes) = @_;
+    $ws->send_pong_frame('');
 }
 
 sub on_frame {
@@ -378,7 +347,7 @@ sub _add_to_loop {
     $self->add_child(
         $self->{ryu} = Ryu::Async->new
     );
-    $self->ping_timer->start;
+    # $self->ping_timer->start;
     $self->{last_id} //= 0;
 }
 
