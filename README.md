@@ -8,7 +8,7 @@ Net::Async::Slack - support for the [https://slack.com](https://slack.com) APIs 
     use Net::Async::Slack;
     my $loop = IO::Async::Loop->new;
     $loop->add(
-     my $gh = Net::Async::Slack->new(
+     my $slack = Net::Async::Slack->new(
       token => '...',
      )
     );
@@ -112,4 +112,4 @@ Tom Molesworth <TEAM@cpan.org>
 
 # LICENSE
 
-Copyright Tom Molesworth 2016-2020. Licensed under the same terms as Perl itself.
+Copyright Tom Molesworth 2016-2021. Licensed under the same terms as Perl itself.
