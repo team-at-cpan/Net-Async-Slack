@@ -2,6 +2,11 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    No new features.
+
+    Bugs fixed:
+
+    - some endpoint definitions needed updating to match the new config file keys
 
 0.006     2021-02-02 05:18:17+08:00 Asia/Kuala_Lumpur
     New features:
