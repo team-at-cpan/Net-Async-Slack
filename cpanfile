@@ -6,6 +6,7 @@ requires 'curry', '>= 1.001000';
 requires 'Dir::Self', 0;
 requires 'File::ShareDir', '>= 1.118';
 requires 'Future', '>= 0.47';
+requires 'Future::AsyncAwait', '>= 0.47';
 requires 'HTTP::Request', 0;
 requires 'indirect', 0;
 requires 'IO::Async::SSL', '>= 0.22';
