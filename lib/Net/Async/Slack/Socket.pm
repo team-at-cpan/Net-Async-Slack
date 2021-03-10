@@ -138,6 +138,7 @@ use Net::Async::Slack::Event::UserResourceGranted;
 use Net::Async::Slack::Event::UserResourceRemoved;
 use Net::Async::Slack::Event::UserTyping;
 
+use List::Util qw(min);
 use Log::Any qw($log);
 
 my $json = JSON::MaybeXS->new;
@@ -178,7 +179,8 @@ Establishes the connection. Called by the top-level L<Net::Async::Slack> instanc
 
 async sub connect {
     my ($self, %args) = @_;
-    my $uri = $self->wss_uri or die 'no websocket URI available';
+    my $uri = delete($args{uri}) // $self->wss_uri or die 'no websocket URI available';
+    my $prev = $self->{ws};
     $self->add_child(
         $self->{ws} = Net::Async::WebSocket::Client->new(
             on_frame => $self->curry::weak::on_frame,
@@ -189,6 +191,10 @@ async sub connect {
     my $res = await $self->{ws}->connect(
         url        => "$uri",
     );
+    if($prev) {
+        $log->tracef('Closing previous websocket connection');
+        $prev->close_now;
+    }
     $self->event_mangler;
     return $res;
 }
@@ -196,6 +202,30 @@ async sub connect {
 sub on_ping_frame {
     my ($self, $ws, $bytes) = @_;
     $ws->send_pong_frame('');
+}
+
+async sub reconnect {
+    my ($self) = @_;
+    my $sleep = 0;
+    while(1) {
+        try {
+            my ($uri) = await Future->wait_any(
+                $self->slack->socket,
+                $self->loop->timeout_future(after => 30),
+            );
+            await Future->wait_any(
+                $self->connect(
+                    uri => $uri
+                ),
+                $self->loop->timeout_future(after => 30),
+            );
+            return;
+        } catch($e) {
+            $sleep = min(30.0, ($sleep || 0.008) * 2);
+            $log->errorf('Failed to reconnect for socket mode, will try again in %.3fs: %s', $sleep, $e);
+            await $self->loop->delay_future(after => $sleep);
+        }
+    }
 }
 
 sub on_frame {
@@ -209,6 +239,9 @@ sub on_frame {
         $log->tracef("<< %s", $text);
         try {
             my $data = $json->decode($text);
+            if($data->{type} eq 'disconnect') {
+                $self->{reconnecting} ||= $self->reconnect->on_ready(sub { delete $self->{reconnecting} });
+            }
             if(my $env_id = $data->{envelope_id}) {
                 $self->ws->send_frame(
                     buffer => $json->encode({
