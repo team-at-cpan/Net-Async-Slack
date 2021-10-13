@@ -2,6 +2,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    [New features]
+    - support for `blocks` when updating a message
+
     [Bugs fixed]
     - socket mode reconnection should be (more?) reliable now
 
