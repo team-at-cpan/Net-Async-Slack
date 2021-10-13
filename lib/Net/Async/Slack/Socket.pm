@@ -185,6 +185,7 @@ async sub connect {
         $self->{ws} = Net::Async::WebSocket::Client->new(
             on_frame => $self->curry::weak::on_frame,
             on_ping_frame => $self->curry::weak::on_ping_frame,
+            on_close_frame => $self->curry::weak::on_close_frame,
         )
     );
     $log->tracef('URL for websockets will be %s', "$uri");
@@ -204,11 +205,19 @@ sub on_ping_frame {
     $ws->send_pong_frame('');
 }
 
+sub on_close_frame {
+    my ($self) = @_;
+    $log->debugf('Received close frame');
+    $self->trigger_reconnect_if_needed
+}
 async sub reconnect {
     my ($self) = @_;
     my $sleep = 0;
+    my $count = 0;
     while(1) {
+        ++$count;
         try {
+            $log->debugf('Attempting reconnect, try %d', $count);
             my ($uri) = await Future->wait_any(
                 $self->slack->socket,
                 $self->loop->timeout_future(after => 30),
@@ -228,6 +237,19 @@ async sub reconnect {
     }
 }
 
+sub on_close {
+    my ($self) = @_;
+    $self->trigger_reconnect_if_needed;
+}
+
+sub trigger_reconnect_if_needed {
+    my ($self) = @_;
+    $log->tracef('trigger_reconnect_if_needed');
+    return $self->{reconnecting} ||= $self->reconnect->on_ready(sub {
+        delete $self->{reconnecting}
+    });
+}
+
 sub on_frame {
     my ($self, $ws, $bytes) = @_;
     my $text = Encode::decode_utf8($bytes);
@@ -240,13 +262,16 @@ sub on_frame {
         try {
             my $data = $json->decode($text);
             if($data->{type} eq 'disconnect') {
-                $self->{reconnecting} ||= $self->reconnect->on_ready(sub { delete $self->{reconnecting} });
+                $log->debugf('Received disconnection notification, reason: %s (debug info: %s)', $data->{reason}, $data->{debug_info});
+                $self->trigger_reconnect_if_needed;
             }
             if(my $env_id = $data->{envelope_id}) {
+                my $data = $json->encode({
+                    envelope_id => $env_id
+                });
+                $log->tracef(">> %s", $data);
                 $self->ws->send_frame(
-                    buffer => $json->encode({
-                        envelope_id => $env_id
-                    }),
+                    buffer => $data,
                     masked => 1
                 )->retain;
             }
