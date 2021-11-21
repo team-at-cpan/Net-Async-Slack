@@ -2,6 +2,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.009     2021-11-21 22:26:45+08:00 Asia/Kuala_Lumpur
     [Bugs fixed]
     - missing JSON::MaybeUTF8 dependency added, thanks to SREZIC for reporting
 
