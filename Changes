@@ -2,6 +2,13 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    [New features]
+
+    - socket mode provides ->last_frame_epoch to check when the last data was
+    received from the server
+    - `Net::Async::Slack->new(debug => 1, ...)` provides an (undocumented-as-yet!)
+    way to test Slack socket-mode reconnection logic
+    - socket-mode example in examples/socket.pl
 
 0.009     2021-11-21 22:26:45+08:00 Asia/Kuala_Lumpur
     [Bugs fixed]
