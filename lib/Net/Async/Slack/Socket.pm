@@ -202,6 +202,7 @@ async sub connect {
 
 sub on_ping_frame {
     my ($self, $ws, $bytes) = @_;
+    $self->connection_watchdog_nudge;
     $ws->send_pong_frame('');
 }
 
@@ -210,6 +211,7 @@ sub on_close_frame {
     $log->debugf('Received close frame');
     $self->trigger_reconnect_if_needed
 }
+
 async sub reconnect {
     my ($self) = @_;
     my $sleep = 0;
@@ -245,14 +247,41 @@ sub on_close {
 sub trigger_reconnect_if_needed {
     my ($self) = @_;
     $log->tracef('trigger_reconnect_if_needed');
+    $self->connection_watchdog->stop;
     return $self->{reconnecting} ||= $self->reconnect->on_ready(sub {
         delete $self->{reconnecting}
     });
 }
 
+sub connection_watchdog {
+    my ($self) = @_;
+    $self->{connection_watchdog} ||= do {
+        $self->add_child(
+            my $timer = IO::Async::Timer::Countdown->new(
+                delay => 30,
+                on_expire => $self->$curry::weak(sub {
+                    my ($self) = @_;
+                    $self->trigger_reconnect_if_needed
+                }),
+            )
+        );
+        $timer->start;
+        $timer
+    };
+}
+
+sub connection_watchdog_nudge {
+    my ($self) = @_;
+    my $timer = $self->connection_watchdog;
+    $timer->reset;
+    $timer->start if $timer->is_expired;
+    $timer
+}
+
 sub on_frame {
     my ($self, $ws, $bytes) = @_;
     my $text = Encode::decode_utf8($bytes);
+    $self->connection_watchdog_nudge;
 
     # Empty frame is used for PING, send a response back
     if(!length($text)) {
