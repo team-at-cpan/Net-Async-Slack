@@ -248,6 +248,8 @@ async sub connect {
                 $prev->close_now;
                 $self->remove_child($prev) if $prev->parent;
             })->retain;
+        } catch($e) {
+            $log->errorf('Unable to clean up previous connection: %s', $e);
         }
     }
     $self->event_mangler;
