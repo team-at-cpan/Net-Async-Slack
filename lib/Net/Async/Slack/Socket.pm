@@ -256,7 +256,7 @@ async sub connect {
     if($prev) {
         $log->tracef('Closing previous websocket connection');
         try {
-            $prev->send_close_frame('', masked => 1)->then(async sub {
+            $prev->send_close_frame('')->then(async sub {
                 $prev->close_now;
                 $self->remove_child($prev) if $prev->parent;
             })->retain;
