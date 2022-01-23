@@ -450,20 +450,22 @@ sub http_post {
 
 async sub socket {
     my ($self) = @_;
-    my $uri = $self->endpoint(
-        'apps_connections_open',
-    ) or die 'no endpoint';
-    my $res = await $self->http_post(
-        $uri,
-        [ ],
-        headers => {
-            Authorization => 'Bearer ' . $self->app_token
-        }
-    );
-    die 'failed to obtain socket-mode URL' unless $res->{ok};
-    my $uri = URI->new($res->{url});
-    $uri->query_param(debug_reconnects => 'true') if $self->{debug};
-    return $uri;
+    my $target_uri = do {
+        my $uri = $self->endpoint(
+            'apps_connections_open',
+        ) or die 'no endpoint';
+        my $res = await $self->http_post(
+            $uri,
+            [ ],
+            headers => {
+                Authorization => 'Bearer ' . $self->app_token
+            }
+        );
+        die 'failed to obtain socket-mode URL' unless $res->{ok};
+        URI->new($res->{url});
+    };
+    $target_uri->query_param(debug_reconnects => 'true') if $self->{debug};
+    return $target_uri;
 }
 
 sub configure {
