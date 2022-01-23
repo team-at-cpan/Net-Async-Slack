@@ -10,7 +10,7 @@ jobs:
     - run:
         command: |
           cpanm -n $(dzil authordeps)
-          cpanm -n --installdeps --with-develop .
+          dzil run cpanm -n --installdeps --with-develop .
         name: Install deps
     - save_cache:
         key: cpan-{{ checksum "cpanfile" }}
