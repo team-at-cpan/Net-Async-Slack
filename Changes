@@ -2,6 +2,8 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+
+0.010     2022-01-23 19:18:24+08:00 Asia/Kuala_Lumpur
     [New features]
 
     - socket mode provides ->last_frame_epoch to check when the last data was
