@@ -16,13 +16,16 @@ Net::Async::Slack::Socket - socket-mode notifications for L<https://slack.com>
 
 This is a basic wrapper for Slack's socket-mode features.
 
+See L<https://api.slack.com/apis/connections/socket> for some background on using this feature.
+
 This provides an event stream using websockets.
 
 For a full list of events, see L<https://api.slack.com/events>.
 
 =cut
 
-no indirect;
+use Syntax::Keyword::Try;
+no indirect qw(fatal);
 use mro;
 
 use Future;
@@ -33,7 +36,6 @@ use URI::QueryParam;
 use URI::Template;
 use JSON::MaybeUTF8 qw(:v2);
 use Time::Moment;
-use Syntax::Keyword::Try;
 
 use IO::Async::Timer::Countdown;
 use Net::Async::WebSocket::Client;
@@ -167,6 +169,52 @@ sub events {
     }
 }
 
+=head2 handle_unfurl_domain
+
+Registers a handler for URLs.
+
+Takes the following named parameters:
+
+=over 4
+
+=item * C<domain> - which host/domain to respond to, e.g. C<google.com> for L<https://google.com>
+
+=item * C<handler> - a callback, expected to take a L<URI> instance and return a L<Future> with a Slack message
+
+=back
+
+Example usage:
+
+ $sock->handle_unfurl_domain(
+     domain => 'service.local',
+     handler => async sub ($uri) {
+         my ($id) = $uri->path =~ m{/id/([0-9]+)}
+             or return undef;
+         return +{
+             blocks => [ {
+                 "type" => "section",
+                 "text" => {
+                     "type" => "mrkdwn",
+                     "text" => "Request with ID `$id`",
+                 },
+             } ]
+         };
+     }
+ );
+
+Returns the L<Net::Async::Slack::Socket> instance to allow chaining.
+
+=cut
+
+sub handle_unfurl_domain {
+    my ($self, %args) = @_;
+    $self->{unfurl_domain}{
+        delete $args{domain} || die 'need a domain'
+    } = $args{handler}
+        or die 'need a handler';
+    return $self;
+}
+
 =head1 METHODS - Internal
 
 You may not need to call these directly. If I'm wrong and you find yourself having
@@ -289,8 +337,11 @@ sub on_frame {
         return;
     }
 
+    my $text = eval { Encode::decode_utf8($bytes) } // do {
+        $log->errorf('Invalid UTF8 received from Slack: %v02x', $bytes);
+        return;
+    };
     try {
-        my $text = Encode::decode_utf8($bytes);
         $log->tracef("<< %s", $text);
         my $data = decode_json_text($text);
         if($data->{type} eq 'disconnect') {
@@ -325,8 +376,8 @@ sub on_frame {
                 }
             }
         }
-    } catch {
-        $log->errorf("Exception in websocket raw frame handling: %s (original text %s)", $@, $text);
+    } catch ($e) {
+        $log->errorf("Exception in websocket raw frame handling: %s (original text %s)", $e, $text);
     }
 }
 
@@ -354,19 +405,6 @@ sub ping_timer {
         );
         $timer
     }
-}
-
-=head2 handle_unfurl_domain
-
-=cut
-
-sub handle_unfurl_domain {
-    my ($self, %args) = @_;
-    $self->{unfurl_domain}{
-        delete $args{domain} || die 'need a domain'
-    } = $args{handler}
-        or die 'need a handler';
-    return;
 }
 
 sub event_mangler {
