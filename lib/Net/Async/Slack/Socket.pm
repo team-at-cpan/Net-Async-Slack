@@ -229,7 +229,7 @@ Establishes the connection. Called by the top-level L<Net::Async::Slack> instanc
 async sub connect {
     my ($self, %args) = @_;
     my $uri = delete($args{uri}) // $self->wss_uri or die 'no websocket URI available';
-    my $prev = $self->{ws};
+    my $prev = delete $self->{ws};
     $self->add_child(
         $self->{ws} = Net::Async::WebSocket::Client->new(
             on_frame => $self->curry::weak::on_frame,
@@ -243,7 +243,12 @@ async sub connect {
     );
     if($prev) {
         $log->tracef('Closing previous websocket connection');
-        $prev->close_now;
+        try {
+            $prev->send_close_frame('', masked => 1)->then(async sub {
+                $prev->close_now;
+                $self->remove_child($prev) if $prev->parent;
+            })->retain;
+        }
     }
     $self->event_mangler;
     return $res;
