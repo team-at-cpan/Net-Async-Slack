@@ -18,9 +18,14 @@ jobs:
             - /usr/local/lib/perl5/site_perl
     - run:
         command: |
-          perl Makefile.PL && make && make test
+          dzil test
         name: Run tests
     - run:
         command: |
+          dzil xtest
+        name: Run author tests
+    - run:
+        command: |
+          cpanm Devel::Cover
           cover -test -report coveralls
         name: Coverage
