@@ -461,12 +461,14 @@ async sub socket {
         }
     );
     die 'failed to obtain socket-mode URL' unless $res->{ok};
-    return URI->new($res->{url});
+    my $uri = URI->new($res->{url});
+    $uri->query_param(debug_reconnects => 'true') if $self->{debug};
+    return $uri;
 }
 
 sub configure {
     my ($self, %args) = @_;
-    for my $k (qw(client_id token app_token slack_host)) {
+    for my $k (qw(client_id token app_token slack_host debug)) {
         $self->{$k} = delete $args{$k} if exists $args{$k};
     }
     $self->next::method(%args);
