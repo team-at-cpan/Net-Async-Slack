@@ -215,6 +215,18 @@ sub handle_unfurl_domain {
     return $self;
 }
 
+=head2 last_frame_epoch
+
+Returns the floating-point timestamp for the last frame we received. Will be
+C<undef> if we have no frames yet.
+
+=cut
+
+sub last_frame_epoch {
+    my ($self) = @_;
+    return $self->{last_frame_epoch};
+}
+
 =head1 METHODS - Internal
 
 You may not need to call these directly. If I'm wrong and you find yourself having
@@ -331,6 +343,7 @@ sub connection_watchdog_nudge {
     my $timer = $self->connection_watchdog;
     $timer->reset;
     $timer->start if $timer->is_expired;
+    $self->{last_frame_epoch} = $self->loop->time;
     $timer
 }
 
