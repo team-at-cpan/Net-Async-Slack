@@ -79,14 +79,9 @@ sub rtm {
         'rtm_connect',
     ));
     $self->{rtm} //= $self->http_get(
-        uri => URI->new(
-            $self->endpoint(
-                'rtm_connect',
-            )
+        uri => $self->endpoint(
+            'rtm_connect',
         ),
-        headers => {
-            Authorization => 'Bearer ' . $self->token
-        }
     )->then(sub {
         my $result = shift;
         return Future->done(URI->new($result->{url})) if exists $result->{url};
