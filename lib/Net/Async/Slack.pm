@@ -203,6 +203,39 @@ sub conversations_info {
     )
 }
 
+sub conversations_invite {
+    my ($self, %args) = @_;
+    my $chan = $args{channel} or die 'need a channel';
+    my @users = ref($args{users}) ? $args{users}->@* : $args{users};
+    return $self->http_post(
+        $self->endpoint(
+            'conversations_invite',
+        ),
+        {
+            channel => $chan,
+            users => join(',', @users),
+        }
+    )
+}
+
+async sub users_list {
+    my ($self, %args) = @_;
+    return await $self->http_get(
+        uri => $self->endpoint(
+            'users_list',
+            %args
+        ),
+    )
+}
+async sub conversations_list {
+    my ($self, %args) = @_;
+    return await $self->http_get(
+        uri => $self->endpoint(
+            'conversations_list',
+            %args
+        ),
+    )
+}
 async sub conversations_history {
     my ($self, %args) = @_;
     return await $self->http_get(
@@ -238,6 +271,16 @@ sub join_channel {
             'conversations_join',
         ),
         \@content,
+    )
+}
+
+async sub users_profile_get {
+    my ($self, %args) = @_;
+    return await $self->http_get(
+        uri => $self->endpoint(
+            'users_profile_get',
+            %args
+        ),
     )
 }
 
