@@ -408,6 +408,7 @@ sub http_get {
     my ($self, %args) = @_;
 
     my $uri = delete $args{uri};
+    $args{headers} ||= $self->auth_headers;
     $log->tracef("GET %s { %s }", "$uri", \%args);
     $self->http->GET(
         $uri,
@@ -457,7 +458,7 @@ sub http_post {
     $args{headers} ||= $self->auth_headers;
     if(ref $content eq 'HASH') {
         $content = encode_json_utf8($content);
-        $args{content_type} = 'application/json';
+        $args{content_type} = 'application/json; charset=utf-8';
     }
     $self->http->POST(
         $uri,
