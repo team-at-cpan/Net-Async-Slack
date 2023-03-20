@@ -119,6 +119,7 @@ use Net::Async::Slack::Event::ResourcesAdded;
 use Net::Async::Slack::Event::ResourcesRemoved;
 use Net::Async::Slack::Event::ScopeDenied;
 use Net::Async::Slack::Event::ScopeGranted;
+use Net::Async::Slack::Event::Shortcut;
 use Net::Async::Slack::Event::StarAdded;
 use Net::Async::Slack::Event::StarRemoved;
 use Net::Async::Slack::Event::SubteamCreated;
@@ -142,6 +143,7 @@ use Net::Async::Slack::Event::UserResourceDenied;
 use Net::Async::Slack::Event::UserResourceGranted;
 use Net::Async::Slack::Event::UserResourceRemoved;
 use Net::Async::Slack::Event::UserTyping;
+use Net::Async::Slack::Event::ViewSubmission;
 
 use List::Util qw(min);
 use Log::Any qw($log);
