@@ -144,6 +144,7 @@ use Net::Async::Slack::Event::UserResourceGranted;
 use Net::Async::Slack::Event::UserResourceRemoved;
 use Net::Async::Slack::Event::UserTyping;
 use Net::Async::Slack::Event::ViewSubmission;
+use Net::Async::Slack::Event::WorkflowStepEdit;
 
 use List::Util qw(min);
 use Log::Any qw($log);
