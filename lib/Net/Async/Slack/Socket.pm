@@ -371,27 +371,49 @@ sub on_frame {
             $log->debugf('Received disconnection notification, reason: %s (debug info: %s)', $data->{reason}, $data->{debug_info});
             $self->trigger_reconnect_if_needed;
         }
-        if(my $env_id = $data->{envelope_id}) {
-            my $data = encode_json_utf8({
-                envelope_id => $env_id
-            });
-            $log->tracef(">> %s", $data);
-            $self->ws->send_frame(
-                buffer => $data,
-                masked => 1
-            )->retain;
+
+        my $pending;
+
+        my $env_id = $data->{envelope_id};
+        if($env_id) {
+            if($data->{accepts_response_payload}) {
+
+                # If the caller marks our future as done, send the result over as a payload
+                $pending = $self->loop->new_future->on_done($self->$curry::weak(sub {
+                    my ($self, $payload) = @_;
+                    $self->send_response($env_id, $payload)->retain;
+                    return;
+                }));
+                # ... but auto-acknowledge before the deadline if they don't, for back-compatibility
+                my $f = $self->loop->delay_future(
+                    after => 1.5
+                )->on_done($self->$curry::weak(sub {
+                    my ($self) = @_;
+                    $self->send_response($env_id)->retain;
+                    return;
+                }));
+                # Make sure only one of the actions completes
+                Future->wait_any($pending, $f)->retain;
+            } else {
+                $self->send_response($env_id)->retain;
+            }
         }
+
         if(my $type = $data->{payload}{type}) {
             if($type eq 'event_callback') {
                 my $ev = Net::Async::Slack::EventType->from_json(
                     $data->{payload}{event}
                 );
+                $ev->{envelope_id} = $env_id;
+                $ev->{response_future} = $pending if $pending;
                 $log->tracef("Have event [%s], emitting", $ev->type);
                 $self->events->emit($ev);
             } else {
                 if(my $ev = Net::Async::Slack::EventType->from_json(
                     $data->{payload}
                 )) {
+                    $ev->{envelope_id} = $env_id;
+                    $ev->{response_future} = $pending if $pending;
                     $log->tracef("Have event [%s], emitting", $ev->type);
                     $self->events->emit($ev);
                 } else {
@@ -402,6 +424,20 @@ sub on_frame {
     } catch ($e) {
         $log->errorf("Exception in websocket raw frame handling: %s (original text %s)", $e, $text);
     }
+}
+
+sub send_response {
+    my ($self, $env_id, $payload) = @_;
+    die 'need env_id' unless $env_id;
+    my $data = encode_json_utf8({
+        envelope_id => $env_id,
+        ($payload ? (payload => $payload) : ()),
+    });
+    $log->tracef(">> %s", $data);
+    return $self->ws->send_frame(
+        buffer => $data,
+        masked => 1
+    );
 }
 
 sub next_id {
