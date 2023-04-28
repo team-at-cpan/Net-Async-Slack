@@ -220,7 +220,8 @@ sub conversations_invite {
 
 async sub users_list {
     my ($self, %args) = @_;
-    return await $self->http_get(
+    return await $self->http_get_paged(
+        key => 'members',
         uri => $self->endpoint(
             'users_list',
             %args
@@ -434,6 +435,31 @@ sub http_get {
         }
         Future->fail(@_);
     })
+}
+
+async sub http_get_paged {
+    my ($self, %args) = @_;
+    my $key = delete $args{key}
+        or die 'need a hash key to find the results array in the response';
+    my $uri = delete $args{uri};
+    $uri = URI->new($uri) unless ref($uri);
+    $uri->query_param(limit => 500) unless $uri->query_param('limit');
+    my $data;
+    my $found;
+    my $offset;
+    do {
+        my $res = await $self->http_get(uri => $uri, %args);
+        die $res unless $res->{ok};
+        $offset = $res->{offset};
+        $uri->query_param(offset => $offset);
+        $found = 0 + $res->{$key}->@*;
+        if($data) {
+            push $data->@*, $res->{$key}->@*;
+        } else {
+            $data = $res->{$key};
+        }
+    } while $found and $offset;
+    return $data;
 }
 
 sub auth_headers {
