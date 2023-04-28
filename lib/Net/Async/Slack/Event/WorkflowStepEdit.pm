@@ -48,6 +48,7 @@ sub trigger_id { shift->{trigger_id} }
 sub action_ts { shift->{action_ts} }
 sub token { shift->{token} }
 sub workflow_step { shift->{workflow_step} }
+sub workflow_step_edit_id { shift->{workflow_step}{workflow_step_edit_id} }
 sub step_id { shift->{workflow_step}{step_id} }
 sub workflow_id { shift->{workflow_step}{workflow_id} }
 

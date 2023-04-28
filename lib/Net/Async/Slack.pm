@@ -285,6 +285,16 @@ async sub users_profile_get {
     )
 }
 
+async sub workflows_update_step {
+    my ($self, %args) = @_;
+    return await $self->http_post(
+        $self->endpoint(
+            'workflows_update_step',
+        ),
+        \%args,
+    )
+}
+
 =head1 METHODS - Internal
 
 =head2 endpoints
