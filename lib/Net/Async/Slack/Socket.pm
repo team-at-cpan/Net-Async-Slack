@@ -120,6 +120,7 @@ use Net::Async::Slack::Event::ResourcesRemoved;
 use Net::Async::Slack::Event::ScopeDenied;
 use Net::Async::Slack::Event::ScopeGranted;
 use Net::Async::Slack::Event::Shortcut;
+use Net::Async::Slack::Event::SlashCommands;
 use Net::Async::Slack::Event::StarAdded;
 use Net::Async::Slack::Event::StarRemoved;
 use Net::Async::Slack::Event::SubteamCreated;
@@ -419,6 +420,15 @@ sub on_frame {
                 } else {
                     $log->errorf('Failed to locate event type from payload %s', $data->{payload});
                 }
+            }
+        } elsif($type = $data->{type}) {
+            $log->tracef("Have generic/unknown event [%s], emitting", $data);
+            if(my $ev = Net::Async::Slack::EventType->from_json(
+                $data
+            )) {
+                $self->events->emit($ev);
+            } else {
+                $log->errorf('Unable to find event type from %s', $data);
             }
         }
     } catch ($e) {
