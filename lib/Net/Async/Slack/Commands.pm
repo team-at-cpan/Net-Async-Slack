@@ -6368,7 +6368,7 @@ async sub views_open {
         'views_open',
     );
     my $content = encode_json_utf8({
-        %args{grep { exists $args{$_} } qw(trigger_id view private_metadata)}
+        %args{grep { exists $args{$_} } qw(trigger_id view)}
     });
     my ($res) = await $self->http_post(
         $uri,
