@@ -1,0 +1,75 @@
+do { my $x = {
+       'configure' => {
+                        'requires' => {
+                                        'ExtUtils::MakeMaker' => '0',
+                                        'File::ShareDir::Install' => '0.06'
+                                      }
+                      },
+       'develop' => {
+                      'requires' => {
+                                      'Devel::Cover' => '0',
+                                      'Devel::Cover::Report::Coveralls' => '0.11',
+                                      'Dist::Zilla' => '5',
+                                      'Dist::Zilla::PluginBundle::Author::TEAM' => '0',
+                                      'Software::License::Perl_5' => '0',
+                                      'Test::CPAN::Changes' => '0.19',
+                                      'Test::CPAN::Meta' => '0',
+                                      'Test::CPANfile' => '0.02',
+                                      'Test::EOL' => '0',
+                                      'Test::MinimumVersion' => '0',
+                                      'Test::Mojibake' => '0',
+                                      'Test::More' => '0.88',
+                                      'Test::NoTabs' => '0',
+                                      'Test::Pod' => '1.41',
+                                      'Test::Portability::Files' => '0',
+                                      'Test::Version' => '1'
+                                    }
+                    },
+       'runtime' => {
+                      'requires' => {
+                                      'Adapter::Async' => '0.019',
+                                      'Bytes::Random::Secure' => '0.29',
+                                      'Cache::LRU' => '0.04',
+                                      'Check::UnitCheck' => '0',
+                                      'Dir::Self' => '0',
+                                      'File::ShareDir' => '1.118',
+                                      'Future' => '0.47',
+                                      'Future::AsyncAwait' => '0.49',
+                                      'HTTP::Request' => '0',
+                                      'IO::Async::SSL' => '0.22',
+                                      'JSON::MaybeUTF8' => '2.000',
+                                      'JSON::MaybeXS' => '1.004003',
+                                      'Log::Any' => '1.709',
+                                      'Net::Async::HTTP' => '0.48',
+                                      'Net::Async::OAuth::Client' => '0',
+                                      'Net::Async::WebSocket::Client' => '0',
+                                      'Path::Tiny' => '0.118',
+                                      'Ryu' => '2.007',
+                                      'Ryu::Async' => '0.019',
+                                      'Syntax::Keyword::Try' => '0.21',
+                                      'Time::Moment' => '0.44',
+                                      'URI' => '5.09',
+                                      'URI::QueryParam' => '0',
+                                      'URI::Template' => '0.24',
+                                      'URI::wss' => '0',
+                                      'curry' => '1.001000',
+                                      'indirect' => '0',
+                                      'namespace::clean' => '0'
+                                    }
+                    },
+       'test' => {
+                   'recommends' => {
+                                     'CPAN::Meta' => '2.120900'
+                                   },
+                   'requires' => {
+                                   'ExtUtils::MakeMaker' => '0',
+                                   'File::Spec' => '0',
+                                   'IO::Handle' => '0',
+                                   'IPC::Open3' => '0',
+                                   'Test::CheckDeps' => '0.010',
+                                   'Test::More' => '0.94'
+                                 }
+                 }
+     };
+  $x;
+ }

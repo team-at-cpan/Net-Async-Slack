@@ -1,0 +1,95 @@
+
+Revision history for Net-Async-Slack
+
+0.013     2023-09-21 06:42:57+08:00 Asia/Singapore
+    [New features]
+
+    - slash commands and initial support for workflow steps
+
+0.012     2023-03-20 08:58:57+08:00 Asia/Singapore
+    [New features]
+
+    - support for view submission and shortcut callbacks from Slack socket mode
+
+0.011     2022-05-06 16:55:34+08:00 Asia/Kuala_Lumpur
+    [New features]
+
+    - some additional undocumented methods added for conversations and user info
+    (next version planning to regenerate documentation and method list from official API docs)
+
+    [Bugs fixed]
+
+    - pass authentication to GET requests through headers
+
+0.010     2022-01-23 19:18:24+08:00 Asia/Kuala_Lumpur
+    [New features]
+
+    - socket mode provides ->last_frame_epoch to check when the last data was
+    received from the server
+    - `Net::Async::Slack->new(debug => 1, ...)` provides an (undocumented-as-yet!)
+    way to test Slack socket-mode reconnection logic
+    - socket-mode example in examples/socket.pl
+
+0.009     2021-11-21 22:26:45+08:00 Asia/Kuala_Lumpur
+    [Bugs fixed]
+    - missing JSON::MaybeUTF8 dependency added, thanks to SREZIC for reporting
+
+0.008     2021-10-13 16:02:21+08:00 Asia/Kuala_Lumpur
+    [New features]
+    - support for `blocks` when updating a message
+
+    [Bugs fixed]
+    - socket mode reconnection should be (more?) reliable now
+
+0.007     2021-02-03 05:18:44+08:00 Asia/Kuala_Lumpur
+    No new features.
+
+    Bugs fixed:
+
+    - some endpoint definitions needed updating to match the new config file keys
+
+0.006     2021-02-02 05:18:17+08:00 Asia/Kuala_Lumpur
+    New features:
+
+    - support socket mode (https://api.slack.com/apis/connections/socket)
+    - deprecated RTM, since it's going away in February
+    - full set of Slack methods now supported, see Net::Async::Slack::Commands
+    - unfurl support via socket mode (register a domain and provide callbacks
+    for expanding URLs into blocks)
+
+0.005     2020-11-26 15:11:14+08:00 Asia/Kuala_Lumpur
+    New features:
+
+    - support for blocks in `->send_message`
+
+    Bugs fixed:
+
+    - warning from the `->trigger_ping` method which was passing through
+    an uneven list of parameters
+
+0.004     2020-06-27 23:43:38+08:00 Asia/Kuala_Lumpur
+    New features:
+
+    - ->conversations_info for channel lookup
+
+    Bugs fixed:
+
+    - RTM connection handling fixed
+
+0.003     2019-04-28 06:03:53+08:00 Asia/Kuala_Lumpur
+    No new features.
+
+    Bug fixes:
+
+    - duplicate ::ReconnectUrl and ::ReconnectURL packages were present,
+    only one of them is actually needed (thanks to NEILB for reporting)
+
+0.002     2017-10-22 17:03:30+08:00 Asia/Kuala_Lumpur
+    New features:
+
+    * ::Message instance allowing support for updating messages
+    * Slack threaded messaging support (via `thread_ts`)
+    * Support for setting the `slack_host` for domains other than `slack.com`
+
+0.001     2017-06-11 06:02:08+08:00 Asia/Kuala_Lumpur
+    Initial version.
