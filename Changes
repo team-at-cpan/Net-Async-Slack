@@ -2,6 +2,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    [New features]
+
+    - slash commands and initial support for workflow steps
 
 0.012     2023-03-20 08:58:57+08:00 Asia/Singapore
     [New features]
