@@ -266,7 +266,7 @@ sub join_channel {
     die 'You need to pass a channel name' unless $args{channel};
     my @content;
     push @content, token => $self->token;
-    push @content, name => $args{channel};
+    push @content, channel => $args{channel};
     $self->http_post(
         $self->endpoint(
             'conversations_join',
