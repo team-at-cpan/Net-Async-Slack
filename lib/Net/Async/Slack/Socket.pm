@@ -67,6 +67,7 @@ use Net::Async::Slack::Event::DndUpdated;
 use Net::Async::Slack::Event::DndUpdatedUser;
 use Net::Async::Slack::Event::EmailDomainChanged;
 use Net::Async::Slack::Event::EmojiChanged;
+use Net::Async::Slack::Event::EventCallback;
 use Net::Async::Slack::Event::FileChange;
 use Net::Async::Slack::Event::FileCommentAdded;
 use Net::Async::Slack::Event::FileCommentDeleted;
