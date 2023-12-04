@@ -48,6 +48,27 @@ and the following named boolean parameters:
 
 Returns a [Future](https://metacpan.org/pod/Future), although the content of the response is subject to change.
 
+## files\_upload
+
+Upload file(s) to a channel or thread.
+
+Supports the following named parameters:
+
+- channel - who to send the message to, can be a channel ID or `#channel` name, or user ID
+- text - the message, see [https://api.slack.com/docs/message-formatting](https://api.slack.com/docs/message-formatting) for details
+- attachments - more advanced messages, see [https://api.slack.com/docs/message-attachments](https://api.slack.com/docs/message-attachments)
+- parse - whether to parse content and convert things like links
+
+and the following named boolean parameters:
+
+- link\_names - convert `@user` and `#channel` to links
+- unfurl\_links - show preview for URLs
+- unfurl\_media - show preview for things that look like media links
+- as\_user - send as user
+- reply\_broadcast - send to all users when replying to a thread
+
+Returns a [Future](https://metacpan.org/pod/Future), although the content of the response is subject to change.
+
 ## conversations\_info
 
 Provide information about a channel.
