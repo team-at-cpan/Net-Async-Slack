@@ -2,6 +2,9 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    [New features]
+
+    - added `event_callback` message type for socket mode
 
 0.014     2023-12-04 23:27:45+08:00 Asia/Singapore
     [Bugs fixed]
