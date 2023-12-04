@@ -2,6 +2,10 @@
 Revision history for {{$dist->name}}
 
 {{$NEXT}}
+    [Bugs fixed]
+
+    - ->files_upload was not submitting valid file data to Slack, attempts to call it would
+    throw an exception instead
 
 0.013     2023-09-21 06:42:57+08:00 Asia/Singapore
     [New features]
