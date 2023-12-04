@@ -4,6 +4,7 @@ Revision history for {{$dist->name}}
 {{$NEXT}}
     [Bugs fixed]
 
+    - ->join_channel was passing "name" instead of "channel"
     - ->files_upload was not submitting valid file data to Slack, attempts to call it would
     throw an exception instead
 
