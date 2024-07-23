@@ -1,4 +1,4 @@
-package Net::Async::Slack::Event::ChannelDeleted;
+package Net::Async::Slack::Event::EventCallback;
 
 use strict;
 use warnings;
@@ -9,17 +9,17 @@ use Net::Async::Slack::EventType;
 
 =head1 NAME
 
-Net::Async::Slack::Event::ChannelDeleted - A channel was deleted
+Net::Async::Slack::Event::EventCallback - An event notification
 
 =head1 DESCRIPTION
 
 Example input data:
 
-    channels:read
+    ?
 
 =cut
 
-sub type { 'channel_deleted' }
+sub type { 'event_callback' }
 
 1;
 

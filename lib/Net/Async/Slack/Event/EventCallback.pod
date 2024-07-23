@@ -2,8 +2,8 @@
 
 =for comment POD_DERIVED_INDEX_GENERATED
 The following documentation is automatically generated.  Please do not edit
-this file, but rather the original, inline with Net::Async::Slack::Event::GroupLeft
-at lib/Net/Async/Slack/Event/GroupLeft.pm
+this file, but rather the original, inline with Net::Async::Slack::Event::EventCallback
+at lib/Net/Async/Slack/Event/EventCallback.pm
 (on the system that originally ran this).
 If you do edit this file, and don't want your changes to be removed, make
 sure you change the first line.
@@ -12,13 +12,13 @@ sure you change the first line.
 
 =head1 NAME
 
-Net::Async::Slack::Event::GroupLeft - You left a private channel
+Net::Async::Slack::Event::EventCallback - An event notification
 
 =head1 DESCRIPTION
 
 Example input data:
 
-    groups:read
+    ?
 
 =head1 INHERITED METHODS
 
