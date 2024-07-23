@@ -473,7 +473,8 @@ Issues an HTTP GET request.
 =cut
 
 sub http_get {
-    my ($self, %args) = @_;
+    my ($self, @args) = @_;
+    my %args = (@args == 1) ? (uri => @args) : @args;
 
     my $uri = delete $args{uri};
     $args{headers} ||= $self->auth_headers;
