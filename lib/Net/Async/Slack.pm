@@ -477,8 +477,8 @@ sub http_get {
     my %args = (@args == 1) ? (uri => @args) : @args;
 
     my $uri = delete $args{uri};
-    $args{headers} ||= $self->auth_headers;
     $log->tracef("GET %s { %s }", "$uri", \%args);
+    $args{headers} ||= $self->auth_headers;
     $self->http->GET(
         $uri,
         %args
