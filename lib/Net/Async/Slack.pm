@@ -497,7 +497,7 @@ sub http_get {
         my ($err, $src, $resp, $req) = @_;
         $src //= '';
         if($src eq 'http') {
-            $log->errorf("HTTP error %s, request was %s with response %s", $err, $req->as_string("\n"), $resp->as_string("\n"));
+            $log->errorf("HTTP error %s, request endpoint was %s with response %s", $err, $req->uri, $resp->as_string("\n"));
         } else {
             $log->errorf("Other failure (%s): %s", $src // 'unknown', $err);
         }
@@ -573,7 +573,7 @@ sub http_post {
         my ($err, $src, $resp, $req) = @_;
         $src //= '';
         if($src eq 'http') {
-            $log->errorf("HTTP error %s, request was %s with response %s", $err, $req->as_string("\n"), $resp->as_string("\n"));
+            $log->errorf("HTTP error %s, request endpoint was %s with response %s", $err, $req->uri, $resp->as_string("\n"));
         } else {
             $log->errorf("Other failure (%s): %s", $src // 'unknown', $err);
         }
